@@ -1,5 +1,6 @@
 package com.mindtree.EMandi.modules.mandi.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -21,12 +22,12 @@ public class Mandi {
 	private int mandiPincode;
 	private double storage;
 	@OneToMany(mappedBy = "mandi")
-	private Set<FarmerTransaction> farmerTransactions;
+	private Set<FarmerTransaction> farmerTransactions = new HashSet<>();
 	@OneToOne
 	@JoinColumn(name = "clerkId")
 	private Clerk clerk;
 	@OneToMany(mappedBy = "mandi")
-	private Set<BuyerTransaction> buyerTransactions;
+	private Set<BuyerTransaction> buyerTransactions = new HashSet<>();
 	@ManyToOne
 	@JoinColumn(name = "adminId")
 	private Admin admin;
