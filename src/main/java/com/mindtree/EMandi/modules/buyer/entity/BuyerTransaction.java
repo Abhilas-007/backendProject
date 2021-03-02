@@ -3,6 +3,9 @@ package com.mindtree.EMandi.modules.buyer.entity;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -11,6 +14,9 @@ import com.mindtree.EMandi.modules.mandi.entity.Mandi;
 @Entity
 public class BuyerTransaction {
 	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private int transactionId;
 	private double amount;
 	private String cropName,cropClass;
 	private double quantity;
@@ -72,6 +78,30 @@ public class BuyerTransaction {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public int getTransactionId() {
+		return transactionId;
+	}
+
+	public void setTransactionId(int transactionId) {
+		this.transactionId = transactionId;
+	}
+
+	public Buyer getBuyer() {
+		return buyer;
+	}
+
+	public void setBuyer(Buyer buyer) {
+		this.buyer = buyer;
+	}
+
+	public Mandi getMandi() {
+		return mandi;
+	}
+
+	public void setMandi(Mandi mandi) {
+		this.mandi = mandi;
 	}
 
 	@Override

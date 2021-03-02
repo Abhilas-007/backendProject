@@ -55,6 +55,40 @@ public class Mandi {
 	public void setStorage(double storage) {
 		this.storage = storage;
 	}
+
+	public Set<FarmerTransaction> getFarmerTransactions() {
+		return farmerTransactions;
+	}
+
+	public void setFarmerTransactions(Set<FarmerTransaction> farmerTransactions) {
+		this.farmerTransactions = farmerTransactions;
+	}
+
+	public Clerk getClerk() {
+		return clerk;
+	}
+
+	public void setClerk(Clerk clerk) {
+		this.clerk = clerk;
+	}
+
+	public Set<BuyerTransaction> getBuyerTransactions() {
+		return buyerTransactions;
+	}
+
+	public void setBuyerTransactions(Set<BuyerTransaction> buyerTransactions) {
+		this.buyerTransactions = buyerTransactions;
+	}
+
+	public Admin getAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(Admin admin) {
+		this.admin = admin;
+	}
+	
+	
 	
 	
 }

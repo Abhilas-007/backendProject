@@ -75,6 +75,30 @@ public class Admin {
 	public void setAdmin(SuperAdmin admin) {
 		this.sAdmin = admin;
 	}
+
+	public SuperAdmin getsAdmin() {
+		return sAdmin;
+	}
+
+	public void setsAdmin(SuperAdmin sAdmin) {
+		this.sAdmin = sAdmin;
+	}
+
+	public List<Mandi> getMandis() {
+		return mandis;
+	}
+
+	public void setMandis(List<Mandi> mandis) {
+		this.mandis = mandis;
+	}
+
+	public List<Crop> getCrops() {
+		return crops;
+	}
+
+	public void setCrops(List<Crop> crops) {
+		this.crops = crops;
+	}
 	
 	
 	

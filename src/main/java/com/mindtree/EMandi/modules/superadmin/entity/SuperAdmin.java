@@ -42,5 +42,15 @@ public class SuperAdmin {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public List<Admin> getAdmins() {
+		return admins;
+	}
+
+	public void setAdmins(List<Admin> admins) {
+		this.admins = admins;
+	}
+	
+	
 	
 }

@@ -3,6 +3,8 @@ package com.mindtree.EMandi.modules.farmer.entity;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
@@ -10,6 +12,7 @@ import javax.persistence.OneToMany;
 public class Farmer {
 	
 	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int farmerId;
 	private String farmerName,bankName,accountNumber,ifsc,aadharNumber,password,mobileNumber;
 	@OneToMany(mappedBy = "farmer")
@@ -94,6 +97,16 @@ public class Farmer {
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
 	}
+
+	public Set<FarmerTransaction> getTransactions() {
+		return transactions;
+	}
+
+	public void setTransactions(Set<FarmerTransaction> transactions) {
+		this.transactions = transactions;
+	}
+	
+	
 	
 	
 }

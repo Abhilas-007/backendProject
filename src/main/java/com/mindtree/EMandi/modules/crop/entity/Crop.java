@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -12,17 +14,18 @@ import javax.persistence.OneToMany;
 import com.mindtree.EMandi.modules.admin.entity.Admin;
 
 @Entity
-public class Crop implements Serializable{
+public class Crop{
 	
 	@Id
-	private int cropId;
-	private String cropName;
-	private double cropMSP;
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	protected int cropId;
+	protected String cropName;
+	protected double cropMSP;
 	@ManyToOne
 	@JoinColumn(name = "adminId")
-	private Admin admin;
+	protected Admin admin;
 	@OneToMany(mappedBy = "crop")
-	private List<CropVariety> varieties;
+	protected List<CropVariety> varieties;
 	
 	public Crop() {
 	}
@@ -58,32 +61,22 @@ public class Crop implements Serializable{
 		this.cropMSP = cropMSP;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + cropId;
-		result = prime * result + ((varieties == null) ? 0 : varieties.hashCode());
-		return result;
+	public Admin getAdmin() {
+		return admin;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Crop other = (Crop) obj;
-		if (cropId != other.cropId)
-			return false;
-		if (varieties == null) {
-			if (other.varieties != null)
-				return false;
-		} else if (!varieties.equals(other.varieties))
-			return false;
-		return true;
+	public void setAdmin(Admin admin) {
+		this.admin = admin;
 	}
+
+	public List<CropVariety> getVarieties() {
+		return varieties;
+	}
+
+	public void setVarieties(List<CropVariety> varieties) {
+		this.varieties = varieties;
+	}
+
+	
 	
 }

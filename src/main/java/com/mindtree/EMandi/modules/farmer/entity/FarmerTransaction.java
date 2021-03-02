@@ -1,6 +1,9 @@
 package com.mindtree.EMandi.modules.farmer.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -9,6 +12,9 @@ import com.mindtree.EMandi.modules.mandi.entity.Mandi;
 @Entity
 public class FarmerTransaction {
 	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private int transactionId;
 	private String cropName,cropClass;
 	private double quantity,amount;
 	@ManyToOne
@@ -59,6 +65,22 @@ public class FarmerTransaction {
 
 	public void setAmount(double amount) {
 		this.amount = amount;
+	}
+
+	public Farmer getFarmer() {
+		return farmer;
+	}
+
+	public void setFarmer(Farmer farmer) {
+		this.farmer = farmer;
+	}
+
+	public Mandi getMandi() {
+		return mandi;
+	}
+
+	public void setMandi(Mandi mandi) {
+		this.mandi = mandi;
 	}
 
 	@Override
