@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -18,6 +19,7 @@ public class Admin {
 	private String adminId;
 	private String password,emailId,state;
 	@ManyToOne
+	@JoinColumn(name = "superAdminId")
 	private SuperAdmin sAdmin;
 	@OneToMany(mappedBy = "admin")
 	private List<Mandi> mandis;

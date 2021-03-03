@@ -3,6 +3,7 @@ package com.mindtree.EMandi.modules.mandi.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -23,7 +24,7 @@ public class Mandi {
 	private double storage;
 	@OneToMany(mappedBy = "mandi")
 	private Set<FarmerTransaction> farmerTransactions = new HashSet<>();
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "clerkId")
 	private Clerk clerk;
 	@OneToMany(mappedBy = "mandi")
