@@ -1,5 +1,9 @@
 package com.mindtree.EMandi.modules.buyer.controller;
 
-public class BuyerController {
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
+public class BuyerController {
+	
+	
 }
