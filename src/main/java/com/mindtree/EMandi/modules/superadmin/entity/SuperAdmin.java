@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mindtree.EMandi.modules.admin.entity.Admin;
 
 @Entity
@@ -15,6 +16,7 @@ public class SuperAdmin {
 	private int superAdminId;
 	private String password;
 	@OneToMany(mappedBy = "sAdmin")
+	@JsonIgnore
 	private List<Admin> admins;
 	
 	
