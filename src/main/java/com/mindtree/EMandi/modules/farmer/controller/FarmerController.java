@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mindtree.EMandi.exception.FarmerException;
+import com.mindtree.EMandi.modules.farmer.entity.Farmer;
 import com.mindtree.EMandi.modules.farmer.service.FarmerService;
 
 @RestController
@@ -29,6 +31,21 @@ public class FarmerController {
 		header.add("desc", "Login Request being check");
 		header.add("userType", "farmer");
 		return new ResponseEntity<>(id, header, HttpStatus.OK);
+
+	}
+	
+	@PostMapping("/createFarmer")
+	public ResponseEntity<Object> addPerson(@RequestBody Farmer farmer) throws FarmerException {
+		try {
+//			Employee employee = employeeConvertor.dtoToEntity(empDto);
+			Farmer farmers = farmerService.createFarmer(farmer);
+			HttpHeaders header = new HttpHeaders();
+			header.add("desc", "Farmer application");
+			return new ResponseEntity<Object>(farmers, header, HttpStatus.OK);
+		} catch (Exception e) {
+			System.out.println("Data not added to database");
+			throw new FarmerException("Farmer not added");
+		}
 
 	}
 }
