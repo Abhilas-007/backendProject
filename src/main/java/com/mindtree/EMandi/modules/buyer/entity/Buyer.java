@@ -8,14 +8,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Buyer {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int buyerId;
-	private String buyerName,password,phoneNumber;
-	@OneToMany(mappedBy = "buyer")
+	private String buyerName;
+	private String password;
+	private String phoneNumber;
+	private String securityQuestion;
+	private String answer;
+	@OneToMany(mappedBy = "buyer")@JsonIgnore
 	private Set<BuyerTransaction> buyerTransactions;
 	
 	public Buyer() {
@@ -68,7 +74,21 @@ public class Buyer {
 	public void setBuyerTransactions(Set<BuyerTransaction> buyerTransactions) {
 		this.buyerTransactions = buyerTransactions;
 	}
-	
-	
+
+	public String getSecurityQuestion() {
+		return securityQuestion;
+	}
+
+	public void setSecurityQuestion(String securityQuestion) {
+		this.securityQuestion = securityQuestion;
+	}
+
+	public String getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
 	
 }

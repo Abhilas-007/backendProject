@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mindtree.EMandi.modules.admin.entity.Admin;
 import com.mindtree.EMandi.modules.buyer.entity.BuyerTransaction;
 import com.mindtree.EMandi.modules.clerk.entity.Clerk;
@@ -22,12 +23,12 @@ public class Mandi {
 	@Id
 	private int mandiPincode;
 	private double storage;
-	@OneToMany(mappedBy = "mandi")
+	@OneToMany(mappedBy = "mandi")@JsonIgnore
 	private Set<FarmerTransaction> farmerTransactions = new HashSet<>();
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "clerkId")
 	private Clerk clerk;
-	@OneToMany(mappedBy = "mandi")
+	@OneToMany(mappedBy = "mandi")@JsonIgnore
 	private Set<BuyerTransaction> buyerTransactions = new HashSet<>();
 	@ManyToOne
 	@JoinColumn(name = "adminId")

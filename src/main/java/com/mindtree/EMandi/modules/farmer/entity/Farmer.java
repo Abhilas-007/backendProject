@@ -8,14 +8,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Farmer {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int farmerId;
-	private String farmerName,bankName,accountNumber,ifsc,aadharNumber,password,mobileNumber;
-	@OneToMany(mappedBy = "farmer")
+	private String farmerName;
+	private String bankName;
+	private String accountNumber;
+	private String ifsc;
+	private String aadharNumber;
+	private String password;
+	private String mobileNumber;
+	private String securityQuestion,answer;
+	@OneToMany(mappedBy = "farmer")@JsonIgnore
 	private Set<FarmerTransaction> transactions; 
 	
 	public Farmer() {
@@ -104,6 +113,22 @@ public class Farmer {
 
 	public void setTransactions(Set<FarmerTransaction> transactions) {
 		this.transactions = transactions;
+	}
+
+	public String getSecurityQuestion() {
+		return securityQuestion;
+	}
+
+	public void setSecurityQuestion(String securityQuestion) {
+		this.securityQuestion = securityQuestion;
+	}
+
+	public String getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(String answer) {
+		this.answer = answer;
 	}
 	
 	

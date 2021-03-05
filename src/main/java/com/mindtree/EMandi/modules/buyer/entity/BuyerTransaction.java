@@ -17,9 +17,10 @@ public class BuyerTransaction {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int transactionId;
-	private double amount;
-	private String cropName,cropClass;
+	private String cropName;
+	private String cropClass;
 	private double quantity;
+	private double amount;
 	private Date date;
 	@ManyToOne
 	@JoinColumn(name = "buyerId")
@@ -118,6 +119,7 @@ public class BuyerTransaction {
 		result = prime * result + ((mandi == null) ? 0 : mandi.hashCode());
 		temp = Double.doubleToLongBits(quantity);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + transactionId;
 		return result;
 	}
 
@@ -159,7 +161,10 @@ public class BuyerTransaction {
 			return false;
 		if (Double.doubleToLongBits(quantity) != Double.doubleToLongBits(other.quantity))
 			return false;
+		if (transactionId != other.transactionId)
+			return false;
 		return true;
 	}
-	
+
+		
 }

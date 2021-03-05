@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mindtree.EMandi.modules.crop.entity.Crop;
 import com.mindtree.EMandi.modules.mandi.entity.Mandi;
 import com.mindtree.EMandi.modules.superadmin.entity.SuperAdmin;
@@ -17,13 +18,15 @@ public class Admin {
 	
 	@Id
 	private String adminId;
-	private String password,emailId,state;
+	private String password;
+	private String emailId;
+	private String state;
 	@ManyToOne
 	@JoinColumn(name = "superAdminId")
 	private SuperAdmin sAdmin;
-	@OneToMany(mappedBy = "admin")
+	@OneToMany(mappedBy = "admin")@JsonIgnore
 	private List<Mandi> mandis;
-	@OneToMany(mappedBy = "admin")
+	@OneToMany(mappedBy = "admin")@JsonIgnore
 	private List<Crop> crops;
 	
 	public Admin() {

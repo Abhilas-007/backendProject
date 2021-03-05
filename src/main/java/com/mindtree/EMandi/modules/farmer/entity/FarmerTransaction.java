@@ -1,5 +1,7 @@
 package com.mindtree.EMandi.modules.farmer.entity;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,8 +17,11 @@ public class FarmerTransaction {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int transactionId;
-	private String cropName,cropClass;
-	private double quantity,amount;
+	private String cropName;
+	private String cropClass;
+	private double quantity;
+	private double amount;
+	private Date date;
 	@ManyToOne
 	@JoinColumn(name = "farmerId")
 	private Farmer farmer;
@@ -83,6 +88,22 @@ public class FarmerTransaction {
 		this.mandi = mandi;
 	}
 
+	public int getTransactionId() {
+		return transactionId;
+	}
+
+	public void setTransactionId(int transactionId) {
+		this.transactionId = transactionId;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -92,10 +113,12 @@ public class FarmerTransaction {
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((cropClass == null) ? 0 : cropClass.hashCode());
 		result = prime * result + ((cropName == null) ? 0 : cropName.hashCode());
+		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((farmer == null) ? 0 : farmer.hashCode());
 		result = prime * result + ((mandi == null) ? 0 : mandi.hashCode());
 		temp = Double.doubleToLongBits(quantity);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + transactionId;
 		return result;
 	}
 
@@ -120,6 +143,11 @@ public class FarmerTransaction {
 				return false;
 		} else if (!cropName.equals(other.cropName))
 			return false;
+		if (date == null) {
+			if (other.date != null)
+				return false;
+		} else if (!date.equals(other.date))
+			return false;
 		if (farmer == null) {
 			if (other.farmer != null)
 				return false;
@@ -132,7 +160,10 @@ public class FarmerTransaction {
 			return false;
 		if (Double.doubleToLongBits(quantity) != Double.doubleToLongBits(other.quantity))
 			return false;
+		if (transactionId != other.transactionId)
+			return false;
 		return true;
 	}
-	
+
+		
 }

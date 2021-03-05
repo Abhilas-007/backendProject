@@ -1,6 +1,5 @@
 package com.mindtree.EMandi.modules.crop.entity;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -11,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mindtree.EMandi.modules.admin.entity.Admin;
 
 @Entity
@@ -18,14 +18,14 @@ public class Crop{
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	protected int cropId;
-	protected String cropName;
-	protected double cropMSP;
+	private int cropId;
+	private String cropName;
+	private double cropMSP;
 	@ManyToOne
 	@JoinColumn(name = "adminId")
-	protected Admin admin;
-	@OneToMany(mappedBy = "crop")
-	protected List<CropVariety> varieties;
+	private Admin admin;
+	@OneToMany(mappedBy = "crop")@JsonIgnore
+	private List<CropVariety> varieties;
 	
 	public Crop() {
 	}
