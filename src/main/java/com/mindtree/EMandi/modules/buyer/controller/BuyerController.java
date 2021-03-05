@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mindtree.EMandi.modules.buyer.converter.BuyerConverter;
@@ -17,6 +18,7 @@ import com.mindtree.EMandi.modules.buyer.service.BuyerService;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@RequestMapping("/buyer")
 public class BuyerController {
 	
 	@Autowired
@@ -25,7 +27,7 @@ public class BuyerController {
 	@Autowired
 	private BuyerService buyerService;
 	
-	@PutMapping("/updateBuyer")
+	@PutMapping("/update")
 	public ResponseEntity<BuyerDto> updateBuyer(@RequestBody BuyerDto buyer){
 		
 		Buyer buyerEntity = buyerConverter.dtoToEntity(buyer);
@@ -35,7 +37,7 @@ public class BuyerController {
 		
 	}
 	
-	@GetMapping("/getBuyer/{id}")
+	@GetMapping("/get/{id}")
 	public BuyerDto getBuyer(@PathVariable int id) {
 		
 		Buyer buyer=buyerService.getBuyer(id);
