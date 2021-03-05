@@ -1,10 +1,13 @@
 package com.mindtree.EMandi.modules.admin.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mindtree.EMandi.exception.ResourceNotFoundException;
+import com.mindtree.EMandi.exception.ServiceException;
 import com.mindtree.EMandi.modules.admin.entity.Admin;
 import com.mindtree.EMandi.modules.admin.repository.AdminRepository;
 import com.mindtree.EMandi.modules.admin.service.AdminService;
@@ -23,5 +26,42 @@ public class AdminServiceImpl implements AdminService{
 			return map.get("userId");
 		else return null;
 		return null;
+	}
+	
+	@Override
+	public String addAdmin(Admin admin) throws ServiceException
+	{
+		try
+		{
+			adminRepo.save(admin);
+		}
+		catch(Exception e)
+		{
+			throw new ServiceException("Some exception occured while adding data to DB.",e);
+		}
+		return "Successfully added admin";
+	}
+
+	@Override
+	public List<Admin> getAllAdmins() throws ServiceException
+	{
+		List<Admin> admins = null;
+		try
+		{
+			admins = adminRepo.findAll();
+			if(admins.isEmpty())
+			{
+				throw new ResourceNotFoundException();
+			}
+		}
+		catch(ResourceNotFoundException e)
+		{
+			throw new ServiceException("No data found.",e);
+		}
+		catch(Exception e)
+		{
+			throw new ServiceException("Some exception occured while grabbing data from DB.",e);
+		}
+		return admins;
 	}
 }
