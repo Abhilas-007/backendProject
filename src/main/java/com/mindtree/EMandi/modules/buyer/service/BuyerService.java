@@ -1,6 +1,8 @@
 package com.mindtree.EMandi.modules.buyer.service;
 
 
+import java.util.Map;
+
 import com.mindtree.EMandi.modules.buyer.entity.Buyer;
 
 public interface BuyerService {
@@ -10,4 +12,6 @@ public interface BuyerService {
 	Buyer getBuyer(int id);
 	
 	Buyer saveBuyer(Buyer buyer);
+	
+	public String validateLogin( Map<String, String> map);
 }

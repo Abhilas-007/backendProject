@@ -1,5 +1,7 @@
 package com.mindtree.EMandi.modules.admin.service;
 
-public interface AdminService {
+import java.util.Map;
 
+public interface AdminService {
+	public String validateLogin(Map<String, String> map);
 }

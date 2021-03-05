@@ -1,5 +1,7 @@
 package com.mindtree.EMandi.modules.buyer.service.impl;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,16 @@ public class BuyerServiceImpl implements BuyerService{
 		// TODO Auto-generated method stub
 		
 		return buyerRepository.save(buyer);
+	}
+	@Override
+	public String validateLogin(Map<String, String> map) {
+		Buyer buyer = buyerRepository.findById((Integer.parseInt(map.get("userId")))).orElse(null);
+		if (buyer != null)
+			if (buyer.getPassword().equals(map.get("password")))
+				return map.get("userId");
+			else
+				return null;
+		return null;
 	}
 
 }
