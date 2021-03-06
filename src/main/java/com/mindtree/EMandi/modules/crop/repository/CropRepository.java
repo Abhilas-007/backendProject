@@ -10,4 +10,6 @@ public interface CropRepository extends JpaRepository<Crop, Integer>
 	@Query("select c from Crop c where c.cropName=?1 and c.admin.adminId=?2")
 	Crop findMSP(String cropName,String adminId);
 	
+	
+	
 }

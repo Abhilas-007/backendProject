@@ -6,13 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mindtree.EMandi.modules.crop.entity.Crop;
+import com.mindtree.EMandi.modules.crop.entity.CropVariety;
 import com.mindtree.EMandi.modules.crop.repository.CropRepository;
+import com.mindtree.EMandi.modules.crop.repository.CropVarietyRepository;
 import com.mindtree.EMandi.modules.crop.service.CropService;
 
 @Service
 public class CropServiceImpl implements CropService {
 	@Autowired
 	private CropRepository cropRepo;
+
+	@Autowired
+	private CropVarietyRepository cropVarietyRepo;
 
 	@Override
 	public String addCrop(Crop crop) {
@@ -28,7 +33,7 @@ public class CropServiceImpl implements CropService {
 	@Override
 	public Crop getCropMSP(Crop crop) {
 		// TODO Auto-generated method stub
-		Crop mspCrop = cropRepo.findMSP(crop.getCropName(),crop.getAdmin().getAdminId());
+		Crop mspCrop = cropRepo.findMSP(crop.getCropName(), crop.getAdmin().getAdminId());
 		return mspCrop;
 	}
 
@@ -39,6 +44,14 @@ public class CropServiceImpl implements CropService {
 		crop.setCropId(originalCrop.getCropId());
 		cropRepo.save(crop);
 		return "Successfuly updated";
+	}
+
+	@Override
+	public CropVariety getCropCostForBuyer(String cropName, String cropClass, String adminId) {
+		Crop crop = cropRepo.findMSP(cropName, adminId);
+		int cropId = crop.getCropId();
+		return cropVarietyRepo.getBuyerCropPrice(cropId, cropClass);
+
 	}
 
 }
