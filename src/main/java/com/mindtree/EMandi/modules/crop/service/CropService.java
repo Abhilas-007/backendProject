@@ -2,10 +2,10 @@ package com.mindtree.EMandi.modules.crop.service;
 
 import java.util.List;
 
-import com.mindtree.EMandi.modules.crop.dto.CropDto;
+import com.mindtree.EMandi.modules.crop.entity.Crop;
 
 public interface CropService {
-	public String addCrop(CropDto cropDto);
+	public String addCrop(Crop crop);
 
-	public List<CropDto> getAllCrops();
+	public List<Crop> getAllCrops();
 }

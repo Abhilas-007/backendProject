@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mindtree.EMandi.modules.crop.converter.CropConverter;
 import com.mindtree.EMandi.modules.crop.dto.CropDto;
+import com.mindtree.EMandi.modules.crop.entity.Crop;
 import com.mindtree.EMandi.modules.crop.service.CropService;
 
 @RestController
@@ -22,10 +24,14 @@ import com.mindtree.EMandi.modules.crop.service.CropService;
 public class CropController {
 	@Autowired
 	private CropService cropService;
+	
+	@Autowired
+	private CropConverter cropConverter;
 
 	@PostMapping("/addCrop")
 	public ResponseEntity<String> addCrop(@RequestBody CropDto cropDto) {
-		String message = cropService.addCrop(cropDto);
+		Crop crop = cropConverter.dtoToEntity(cropDto);
+		String message = cropService.addCrop(crop);
 		HttpHeaders header = new HttpHeaders();
 		header.add("Description", "Adding a crop");
 		return ResponseEntity.status(HttpStatus.CREATED).headers(header).body(message);
@@ -33,7 +39,8 @@ public class CropController {
 
 	@GetMapping("/getAllCrops")
 	public ResponseEntity<List<CropDto>> getAllCrops() {
-		List<CropDto> cropsDtos = cropService.getAllCrops();
+		List<Crop> crops = cropService.getAllCrops();
+		List<CropDto> cropsDtos = cropConverter.entityToDtoForList(crops);
 		HttpHeaders header = new HttpHeaders();
 		header.add("Description", "Getting all crops");
 		return ResponseEntity.status(HttpStatus.OK).headers(header).body(cropsDtos);
