@@ -54,4 +54,16 @@ public class CropServiceImpl implements CropService {
 
 	}
 
+	@Override
+	public CropVariety updateCropCostForBuyer(String cropName, String cropClass, String cropPrice, String adminId) {
+		Crop crop = cropRepo.findMSP(cropName, adminId);
+		int cropId = crop.getCropId();
+		CropVariety cropVariety = cropVarietyRepo.getBuyerCropPrice(cropId, cropClass);
+		cropVariety.setBuyerCropPrice(Double.parseDouble(cropPrice));
+		cropVariety.setCrop(crop);
+		cropVariety.setCropClass(cropClass);
+		cropVariety= cropVarietyRepo.save(cropVariety);
+		return cropVariety;
+	}
+
 }

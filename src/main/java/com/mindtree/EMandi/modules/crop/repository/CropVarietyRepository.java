@@ -8,4 +8,5 @@ import com.mindtree.EMandi.modules.crop.entity.CropVariety;
 public interface CropVarietyRepository extends JpaRepository<CropVariety, Integer> {
 	@Query("select c  from CropVariety c where c.crop.cropId=?1 and c.cropClass=?2")
 	CropVariety getBuyerCropPrice(int cropId, String cropClass);
+	
 }
