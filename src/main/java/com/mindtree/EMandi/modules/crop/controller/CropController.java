@@ -55,14 +55,25 @@ public class CropController {
 	}
 
 	@GetMapping("/getCropMSP")
+<<<<<<< HEAD
 	public ResponseEntity<CropDto> getCropMSP(@RequestBody CropDto cropDto) {
 		Crop crop = cropConverter.dtoToEntity(cropDto);
 		crop = cropService.getCropMSP(crop);
 		return new ResponseEntity<CropDto>(cropConverter.entityToDto(crop), HttpStatus.FOUND);
+=======
+	public ResponseEntity<CropDto> getCropMSP(@RequestParam("cropName") String cropName, @RequestParam("adminId") String adminId){
+		Crop crop = cropService.getCropMSP(cropName,adminId);
+		return new ResponseEntity<CropDto>(cropConverter.entityToDto(crop),HttpStatus.OK);
+>>>>>>> 80fcabc0d32d10cd3c9081e727fb198b5b88971b
 	}
 
 	@PutMapping("/updateMSP")
+<<<<<<< HEAD
 	public ResponseEntity<CropDto> updateMSP(@RequestBody CropDto cropDto) {
+=======
+	public ResponseEntity<CropDto> updateMSP(@RequestBody CropDto cropDto){
+		System.out.println(cropDto.getAdminId()+" "+cropDto.getCropMSP()+" "+cropDto.getCropName());
+>>>>>>> 80fcabc0d32d10cd3c9081e727fb198b5b88971b
 		Crop crop = cropConverter.dtoToEntity(cropDto);
 		String message = cropService.updateMSP(crop);
 		return new ResponseEntity<CropDto>(cropDto, HttpStatus.OK);

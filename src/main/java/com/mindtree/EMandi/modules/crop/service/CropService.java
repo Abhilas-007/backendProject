@@ -10,7 +10,7 @@ public interface CropService {
 
 	public List<Crop> getAllCrops();
 	
-	public Crop getCropMSP(Crop crop);
+	public Crop getCropMSP(String cropName, String adminId);
 	
 	public String updateMSP(Crop crop);
 	

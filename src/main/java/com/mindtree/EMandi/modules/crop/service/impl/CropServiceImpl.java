@@ -31,9 +31,9 @@ public class CropServiceImpl implements CropService {
 	}
 
 	@Override
-	public Crop getCropMSP(Crop crop) {
+	public Crop getCropMSP(String cropName, String adminId) {
 		// TODO Auto-generated method stub
-		Crop mspCrop = cropRepo.findMSP(crop.getCropName(), crop.getAdmin().getAdminId());
+		Crop mspCrop = cropRepo.findMSP(cropName, adminId);
 		return mspCrop;
 	}
 
