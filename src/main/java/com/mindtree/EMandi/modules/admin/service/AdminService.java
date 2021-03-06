@@ -8,6 +8,8 @@ import com.mindtree.EMandi.modules.admin.entity.Admin;
 
 public interface AdminService {
 	public String validateLogin(Map<String, String> map);
+
 	public String addAdmin(Admin admin) throws ServiceException;
+
 	public List<Admin> getAllAdmins() throws ServiceException;
 }

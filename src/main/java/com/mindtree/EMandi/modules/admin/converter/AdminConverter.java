@@ -9,10 +9,8 @@ import com.mindtree.EMandi.modules.admin.dto.AdminDto;
 import com.mindtree.EMandi.modules.admin.entity.Admin;
 
 @Component
-public class AdminConverter 
-{
-	public AdminDto entityToDto(Admin admin)
-	{
+public class AdminConverter {
+	public AdminDto entityToDto(Admin admin) {
 		AdminDto dto = new AdminDto();
 		dto.setAdminId(admin.getAdminId());
 		dto.setEmailId(admin.getEmailId());
@@ -21,9 +19,8 @@ public class AdminConverter
 		dto.setsAdmin(admin.getAdmin());
 		return dto;
 	}
-	
-	public List<AdminDto> entityToDto(List<Admin> admins)
-	{
+
+	public List<AdminDto> entityToDto(List<Admin> admins) {
 		return admins.stream().map(x -> entityToDto(x)).collect(Collectors.toList());
 	}
 }

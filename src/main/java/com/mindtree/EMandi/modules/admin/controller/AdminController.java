@@ -26,8 +26,8 @@ import com.mindtree.EMandi.modules.admin.service.AdminService;
 public class AdminController {
 	@Autowired
 	AdminService adminService;
-	
-	@Autowired 
+
+	@Autowired
 	private AdminConverter adminConverter;
 
 	@PostMapping("/login")
@@ -37,46 +37,38 @@ public class AdminController {
 		header.add("desc", "Login Request being check");
 		header.add("userType", "admin");
 		return new ResponseEntity<>(id, header, HttpStatus.OK);
-		
+
 	}
-	
+
 	@PostMapping("/addAdmin")
-	public ResponseEntity<String> addAdmin(@RequestBody Admin admin)
-	{
+	public ResponseEntity<String> addAdmin(@RequestBody Admin admin) {
 		String message = "";
-		try
-		{
+		try {
 			message = adminService.addAdmin(admin);
-		}
-		catch(ServiceException e)
-		{
+		} catch (ServiceException e) {
 			message = "Failed to add admin.";
 			HttpHeaders header = new HttpHeaders();
-			header.add("Description","Adding an admin");
+			header.add("Description", "Adding an admin");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(header).body(message);
 		}
 		HttpHeaders header = new HttpHeaders();
-		header.add("Description","Adding an admin");
+		header.add("Description", "Adding an admin");
 		return ResponseEntity.status(HttpStatus.CREATED).headers(header).body(message);
 	}
-	
+
 	@GetMapping("/getAllAdmins")
-	public ResponseEntity<List<AdminDto>> getAllAdmins()
-	{
+	public ResponseEntity<List<AdminDto>> getAllAdmins() {
 		List<Admin> admins = null;
-		try
-		{
+		try {
 			admins = adminService.getAllAdmins();
-		}
-		catch(ServiceException e)
-		{
+		} catch (ServiceException e) {
 			HttpHeaders header = new HttpHeaders();
-			header.add("Description","Getting all admins");
+			header.add("Description", "Getting all admins");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(header).body(null);
 		}
 		List<AdminDto> adminsDtos = adminConverter.entityToDto(admins);
 		HttpHeaders header = new HttpHeaders();
-		header.add("Description","Getting all admins");
+		header.add("Description", "Getting all admins");
 		return ResponseEntity.status(HttpStatus.OK).headers(header).body(adminsDtos);
 	}
 }
