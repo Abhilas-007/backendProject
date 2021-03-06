@@ -42,11 +42,11 @@ public class BuyerController {
 	}
 
 	@GetMapping("/get/{id}")
-	public BuyerDto getBuyer(@PathVariable int id) {
+	public ResponseEntity<BuyerDto> getBuyer(@PathVariable int id) {
 
 		Buyer buyer = buyerService.getBuyer(id);
 
-		return buyerConverter.entityToDto(buyer);
+		return new ResponseEntity<BuyerDto>(buyerConverter.entityToDto(buyer),HttpStatus.OK);
 	}
 
 	@PostMapping("/add-buyer")

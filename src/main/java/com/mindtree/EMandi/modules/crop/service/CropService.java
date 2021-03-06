@@ -8,4 +8,8 @@ public interface CropService {
 	public String addCrop(Crop crop);
 
 	public List<Crop> getAllCrops();
+	
+	public Crop getCropMSP(Crop crop);
+	
+	public String updateMSP(Crop crop);
 }

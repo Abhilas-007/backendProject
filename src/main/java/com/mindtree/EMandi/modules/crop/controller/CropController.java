@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,5 +45,19 @@ public class CropController {
 		HttpHeaders header = new HttpHeaders();
 		header.add("Description", "Getting all crops");
 		return ResponseEntity.status(HttpStatus.OK).headers(header).body(cropsDtos);
+	}
+	
+	@GetMapping("/getCropMSP")
+	public ResponseEntity<CropDto> getCropMSP(@RequestBody CropDto cropDto){
+		Crop crop = cropConverter.dtoToEntity(cropDto);
+		crop = cropService.getCropMSP(crop);
+		return new ResponseEntity<CropDto>(cropConverter.entityToDto(crop),HttpStatus.FOUND);
+	}
+	
+	@PutMapping("/updateMSP")
+	public ResponseEntity<CropDto> updateMSP(@RequestBody CropDto cropDto){
+		Crop crop = cropConverter.dtoToEntity(cropDto);
+		String message = cropService.updateMSP(crop);
+		return new ResponseEntity<CropDto>(cropDto,HttpStatus.OK);
 	}
 }

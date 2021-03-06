@@ -25,4 +25,20 @@ public class CropServiceImpl implements CropService {
 		return cropRepo.findAll();
 	}
 
+	@Override
+	public Crop getCropMSP(Crop crop) {
+		// TODO Auto-generated method stub
+		Crop mspCrop = cropRepo.findMSP(crop.getCropName(),crop.getAdmin().getAdminId());
+		return mspCrop;
+	}
+
+	@Override
+	public String updateMSP(Crop crop) {
+		// TODO Auto-generated method stub
+		Crop originalCrop = cropRepo.findMSP(crop.getCropName(), crop.getAdmin().getAdminId());
+		crop.setCropId(originalCrop.getCropId());
+		cropRepo.save(crop);
+		return "Successfuly updated";
+	}
+
 }
