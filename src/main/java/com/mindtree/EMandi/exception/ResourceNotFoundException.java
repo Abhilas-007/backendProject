@@ -1,30 +1,31 @@
 package com.mindtree.EMandi.exception;
 
-public class ServiceException extends Exception
+public class ResourceNotFoundException extends ServiceException
 {
 	private static final long serialVersionUID = 1L;
-
-	public ServiceException() {
+	
+	public ResourceNotFoundException() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public ServiceException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+	public ResourceNotFoundException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 		// TODO Auto-generated constructor stub
 	}
 
-	public ServiceException(String message, Throwable cause) {
+	public ResourceNotFoundException(String message, Throwable cause) {
 		super(message, cause);
 		// TODO Auto-generated constructor stub
 	}
 
-	public ServiceException(String message) {
+	public ResourceNotFoundException(String message) {
 		super(message);
 		// TODO Auto-generated constructor stub
 	}
 
-	public ServiceException(Throwable cause) {
+	public ResourceNotFoundException(Throwable cause) {
 		super(cause);
 		// TODO Auto-generated constructor stub
 	}

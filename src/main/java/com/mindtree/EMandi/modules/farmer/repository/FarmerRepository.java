@@ -1,5 +1,9 @@
 package com.mindtree.EMandi.modules.farmer.repository;
 
-public interface FarmerRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.mindtree.EMandi.modules.farmer.entity.Farmer;
+
+public interface FarmerRepository extends JpaRepository<Farmer, String>{
 
 }
