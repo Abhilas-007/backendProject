@@ -55,11 +55,12 @@ public class CropController {
 	@GetMapping("/getCropMSP")
 	public ResponseEntity<CropDto> getCropMSP(@RequestParam("cropName") String cropName, @RequestParam("adminId") String adminId){
 		Crop crop = cropService.getCropMSP(cropName,adminId);
-		return new ResponseEntity<CropDto>(cropConverter.entityToDto(crop),HttpStatus.FOUND);
+		return new ResponseEntity<CropDto>(cropConverter.entityToDto(crop),HttpStatus.OK);
 	}
 	
 	@PutMapping("/updateMSP")
 	public ResponseEntity<CropDto> updateMSP(@RequestBody CropDto cropDto){
+		System.out.println(cropDto.getAdminId()+" "+cropDto.getCropMSP()+" "+cropDto.getCropName());
 		Crop crop = cropConverter.dtoToEntity(cropDto);
 		String message = cropService.updateMSP(crop);
 		return new ResponseEntity<CropDto>(cropDto,HttpStatus.OK);
