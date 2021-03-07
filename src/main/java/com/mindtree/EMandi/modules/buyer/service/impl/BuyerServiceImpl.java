@@ -4,8 +4,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.mindtree.EMandi.modules.buyer.dto.BuyerDto;
 import com.mindtree.EMandi.modules.buyer.entity.Buyer;
 import com.mindtree.EMandi.modules.buyer.repository.BuyerRepository;
 import com.mindtree.EMandi.modules.buyer.service.BuyerService;
@@ -43,6 +41,15 @@ public class BuyerServiceImpl implements BuyerService{
 			else
 				return null;
 		return null;
+	}
+
+	@Override
+	public Buyer updatePassword(Map<String, String> map) {
+		int id=Integer.parseInt(map.get("userId"));
+		Buyer buyer=buyerRepository.findById(id).get();
+		buyer.setPassword(map.get("password"));
+		buyerRepository.save(buyer);
+		return buyer;
 	}
 
 }

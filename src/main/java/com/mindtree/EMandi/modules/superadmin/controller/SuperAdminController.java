@@ -7,11 +7,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mindtree.EMandi.exception.ServiceException;
+import com.mindtree.EMandi.modules.admin.entity.Admin;
+import com.mindtree.EMandi.modules.buyer.entity.Buyer;
+import com.mindtree.EMandi.modules.superadmin.entity.SuperAdmin;
 import com.mindtree.EMandi.modules.superadmin.service.SuperAdminService;
 
 @RestController
@@ -30,5 +37,34 @@ public class SuperAdminController {
 		header.add("userType", "sAdmin");
 		return new ResponseEntity<>(id, header, HttpStatus.OK);
 
+	}
+
+	@GetMapping("/validate/{id}")
+	public ResponseEntity<String> validateSAdmin(@PathVariable String id) {
+		SuperAdmin sAdmin;
+		try {
+			sAdmin = sAdminService.getSAdmin(Integer.parseInt(id));
+		} catch (ServiceException e) {
+			return null;
+		}
+		if (sAdmin != null) {
+			HttpHeaders header = new HttpHeaders();
+			header.add("desc", "credentials validation");
+			header.add("userType", "SuperAdmin");
+			return new ResponseEntity<>(id, header, HttpStatus.OK);
+		} else
+			return null;
+	}
+
+	@PutMapping("/resetPassword")
+	public ResponseEntity<SuperAdmin> resetPassword(@RequestBody Map<String, String> map) {
+		SuperAdmin sAdmin = sAdminService.updatePassword(map);
+		if (sAdmin != null) {
+			HttpHeaders header = new HttpHeaders();
+			header.add("desc", "credentials validation");
+			header.add("userType", "SuperAdmin");
+			return new ResponseEntity<>(sAdmin, header, HttpStatus.OK);
+		} else
+			return null;
 	}
 }

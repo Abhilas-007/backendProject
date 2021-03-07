@@ -54,4 +54,31 @@ public class AdminServiceImpl implements AdminService {
 		}
 		return admins;
 	}
+
+	@Override
+	public Admin getAdmin(String id) throws ServiceException {
+		Admin admin;
+		try {
+			admin = adminRepo.findById(id).get();
+		} catch (IllegalArgumentException e) {
+			throw new ServiceException("No data found for that id", e);
+		}
+
+		return admin;
+	}
+
+	@Override
+	public Admin updatePassword(Map<String, String> map) throws ServiceException {
+		String id = map.get("userId");
+		Admin admin;
+		try{ admin = adminRepo.findById(id).get();
+		admin.setPassword(map.get("password"));
+		adminRepo.save(admin);
+		}catch(IllegalArgumentException e) {
+			throw new ServiceException("passwords couldnt be updated");
+		}
+		return admin;
+
+	}
+
 }

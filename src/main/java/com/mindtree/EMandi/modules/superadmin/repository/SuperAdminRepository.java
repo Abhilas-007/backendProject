@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.mindtree.EMandi.modules.superadmin.entity.SuperAdmin;
 
-public interface SuperAdminRepository extends JpaRepository<SuperAdmin, String> {
+public interface SuperAdminRepository extends JpaRepository<SuperAdmin, Integer> {
 
 }

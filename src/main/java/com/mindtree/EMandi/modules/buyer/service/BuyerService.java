@@ -14,4 +14,6 @@ public interface BuyerService {
 	Buyer saveBuyer(Buyer buyer);
 	
 	public String validateLogin( Map<String, String> map);
+	
+	public Buyer updatePassword(Map<String, String> map);
 }

@@ -12,4 +12,8 @@ public interface AdminService {
 	public String addAdmin(Admin admin) throws ServiceException;
 
 	public List<Admin> getAllAdmins() throws ServiceException;
+
+	public Admin getAdmin(String id) throws ServiceException;
+	
+	public Admin updatePassword(Map<String, String> map) throws ServiceException;
 }

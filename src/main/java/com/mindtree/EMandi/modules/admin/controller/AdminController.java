@@ -1,6 +1,5 @@
 package com.mindtree.EMandi.modules.admin.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,8 +27,8 @@ import com.mindtree.EMandi.modules.crop.converter.CropConverter;
 import com.mindtree.EMandi.modules.crop.dto.CropDto;
 import com.mindtree.EMandi.modules.crop.entity.Crop;
 import com.mindtree.EMandi.modules.crop.service.CropService;
-import com.mindtree.EMandi.modules.mandi.entity.Mandi;
 import com.mindtree.EMandi.modules.mandi.repository.MandiRepository;
+
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -89,7 +89,41 @@ public class AdminController {
 		header.add("Description", "Getting all admins");
 		return ResponseEntity.status(HttpStatus.OK).headers(header).body(adminsDtos);
 	}
-	
+
+
+	@GetMapping("/validate/{id}")
+	public ResponseEntity<String> validateAdmin(@PathVariable String id) {
+		Admin admin;
+		try {
+			admin = adminService.getAdmin(id);
+		} catch (ServiceException e) {
+			return null;
+		}
+		if (admin != null) {
+			HttpHeaders header = new HttpHeaders();
+			header.add("desc", "credentials validation");
+			header.add("userType", "admin");
+			return new ResponseEntity<>(id, header, HttpStatus.OK);
+		} else
+			return null;
+	}
+
+	@PutMapping("/resetPassword")
+	public ResponseEntity<Admin> resetPassword(@RequestBody Map<String, String> map) {
+		Admin admin;
+		try {
+			admin = adminService.updatePassword(map);
+		} catch (ServiceException e) {
+			return null;
+		}
+		if (admin != null) {
+			HttpHeaders header = new HttpHeaders();
+			header.add("desc", "credentials validation");
+			header.add("userType", "admin");
+			return new ResponseEntity<>(admin, header, HttpStatus.OK);
+		} else
+			return null;
+	}
 	@GetMapping("/getAllCrops/{adminId}")
 	public ResponseEntity<List<CropDto>> getCropByAdminId(@PathVariable (value="adminId") String adminId){
 	
@@ -109,4 +143,5 @@ public class AdminController {
 	}
 	
 	
+
 }

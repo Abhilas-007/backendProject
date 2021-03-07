@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mindtree.EMandi.modules.buyer.converter.BuyerConverter;
@@ -46,7 +47,7 @@ public class BuyerController {
 
 		Buyer buyer = buyerService.getBuyer(id);
 
-		return new ResponseEntity<BuyerDto>(buyerConverter.entityToDto(buyer),HttpStatus.OK);
+		return new ResponseEntity<BuyerDto>(buyerConverter.entityToDto(buyer), HttpStatus.OK);
 	}
 
 	@PostMapping("/add-buyer")
@@ -57,6 +58,7 @@ public class BuyerController {
 		return "Data saved";
 
 	}
+
 	@PostMapping("/login")
 	public ResponseEntity<String> sayHello(@RequestBody Map<String, String> map) {
 		String id = buyerService.validateLogin(map);
@@ -67,4 +69,28 @@ public class BuyerController {
 
 	}
 
+	@GetMapping("/validate/{id}")
+	public ResponseEntity<String> validateBuyer(@PathVariable String id) {
+		Buyer buyer = buyerService.getBuyer(Integer.parseInt(id));
+		if (buyer != null) {
+			HttpHeaders header = new HttpHeaders();
+			header.add("desc", "credentials validation");
+			header.add("userType", "buyer");
+			return new ResponseEntity<>("" + id, header, HttpStatus.OK);
+		} else
+			return null;
+	}
+	@PutMapping("/resetPassword")
+	public ResponseEntity<Buyer> resetPassword(@RequestBody Map<String, String> map) {
+		
+		Buyer buyer = buyerService.updatePassword(map);
+		if (buyer != null) {
+			HttpHeaders header = new HttpHeaders();
+			header.add("desc", "credentials validation");
+			header.add("userType", "buyer");
+			return new ResponseEntity<>(buyer, header, HttpStatus.OK);
+		} else
+			return null;
+	}
+	
 }
