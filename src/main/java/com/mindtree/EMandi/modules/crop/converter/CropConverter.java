@@ -36,4 +36,8 @@ public class CropConverter {
 	public List<CropDto> entityToDtoForList(List<Crop> crops) {
 		return crops.stream().map(x -> entityToDto(x)).collect(Collectors.toList());
 	}
+	
+	public List<CropDto> entityToDto(List<Crop> crops){
+		return crops.stream().map(x->entityToDto(x)).collect(Collectors.toList());
+	}
 }

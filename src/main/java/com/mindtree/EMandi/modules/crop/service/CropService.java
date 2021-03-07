@@ -17,4 +17,6 @@ public interface CropService {
 	public CropVariety getCropCostForBuyer(String cropName, String cropClass, String adminId);
 
 	public CropVariety updateCropCostForBuyer(String cropName, String cropClass, String cropPrice, String adminId);
+	
+	public List<Crop> findCropByAdminId(String adminId);
 }

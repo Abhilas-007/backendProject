@@ -1,5 +1,6 @@
 package com.mindtree.EMandi.modules.admin.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,14 @@ import com.mindtree.EMandi.modules.admin.converter.AdminConverter;
 import com.mindtree.EMandi.modules.admin.dto.AdminDto;
 import com.mindtree.EMandi.modules.admin.entity.Admin;
 import com.mindtree.EMandi.modules.admin.service.AdminService;
+import com.mindtree.EMandi.modules.clerk.entity.Clerk;
+import com.mindtree.EMandi.modules.clerk.repository.ClerkRepository;
+import com.mindtree.EMandi.modules.crop.converter.CropConverter;
+import com.mindtree.EMandi.modules.crop.dto.CropDto;
+import com.mindtree.EMandi.modules.crop.entity.Crop;
+import com.mindtree.EMandi.modules.crop.service.CropService;
+import com.mindtree.EMandi.modules.mandi.entity.Mandi;
+import com.mindtree.EMandi.modules.mandi.repository.MandiRepository;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -29,7 +39,15 @@ public class AdminController {
 
 	@Autowired
 	private AdminConverter adminConverter;
-
+    
+    @Autowired
+    private CropConverter cropConverter;
+    @Autowired
+    private CropService cropService;
+    @Autowired
+    private MandiRepository mandiRepository;
+    @Autowired
+    private ClerkRepository clerkRepository;
 	@PostMapping("/login")
 	public ResponseEntity<String> sayHello(@RequestBody Map<String, String> map) {
 		String id = adminService.validateLogin(map);
@@ -71,4 +89,24 @@ public class AdminController {
 		header.add("Description", "Getting all admins");
 		return ResponseEntity.status(HttpStatus.OK).headers(header).body(adminsDtos);
 	}
+	
+	@GetMapping("/getAllCrops/{adminId}")
+	public ResponseEntity<List<CropDto>> getCropByAdminId(@PathVariable (value="adminId") String adminId){
+	
+		List<Crop>	crops=cropService.findCropByAdminId(adminId);
+		HttpHeaders header = new HttpHeaders();
+		header.add("Description", "Getting all crops");
+		List<CropDto> crop=cropConverter.entityToDto(crops);
+		return ResponseEntity.status(HttpStatus.OK).headers(header).body(crop);
+	}
+	 
+	@GetMapping("/getAllClerks/{adminId}")
+	public List<Clerk> getAll(@PathVariable (value="adminId") String adminId){
+		
+		List<String> mandi=mandiRepository.findByAdminId(adminId);
+	List<Clerk> clerk=clerkRepository.findAllById(mandi);
+		return clerk;
+	}
+	
+	
 }

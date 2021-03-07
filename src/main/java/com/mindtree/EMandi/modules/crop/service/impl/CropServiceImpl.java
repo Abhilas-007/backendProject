@@ -66,4 +66,11 @@ public class CropServiceImpl implements CropService {
 		return cropVariety;
 	}
 
+	@Override
+	public List<Crop> findCropByAdminId(String adminId) {
+		// TODO Auto-generated method stub
+		List<Crop> crop=cropRepo.findByAdminId(adminId);
+		return crop;
+	}
+
 }
