@@ -1,5 +1,8 @@
 package com.mindtree.EMandi.modules.mandi.service;
 
-public interface MandiService {
+import com.mindtree.EMandi.modules.mandi.entity.Mandi;
 
+public interface MandiService {
+	
+	Mandi addMandi(Mandi mandi);
 }
