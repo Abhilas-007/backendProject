@@ -2,6 +2,7 @@ package com.mindtree.EMandi.modules.crop.service;
 
 import java.util.List;
 
+import com.mindtree.EMandi.exception.ServiceException;
 import com.mindtree.EMandi.modules.crop.entity.Crop;
 import com.mindtree.EMandi.modules.crop.entity.CropVariety;
 
@@ -14,9 +15,9 @@ public interface CropService {
 	
 	public String updateMSP(Crop crop);
 	
-	public CropVariety getCropCostForBuyer(String cropName, String cropClass, String adminId);
+	public CropVariety getCropCostForBuyer(String cropName, String cropClass, String adminId) throws ServiceException;
 
-	public CropVariety updateCropCostForBuyer(String cropName, String cropClass, String cropPrice, String adminId);
+	public CropVariety updateCropCostForBuyer(String cropName, String cropClass, String cropPrice, String adminId) throws ServiceException;
 	
 	public List<Crop> findCropByAdminId(String adminId);
 }

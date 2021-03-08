@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mindtree.EMandi.exception.ServiceException;
 import com.mindtree.EMandi.modules.crop.converter.CropConverter;
 import com.mindtree.EMandi.modules.crop.converter.CropVarietyConverter;
 import com.mindtree.EMandi.modules.crop.dto.CropDto;
@@ -29,11 +31,13 @@ import com.mindtree.EMandi.modules.crop.service.CropService;
 public class CropController {
 	@Autowired
 	private CropService cropService;
-	
+
 	@Autowired
 	private CropConverter cropConverter;
 
-	@Autowired CropVarietyConverter cropVarietyConvertor;
+	@Autowired
+	CropVarietyConverter cropVarietyConvertor;
+
 	@PostMapping("/addCrop")
 	public ResponseEntity<String> addCrop(@RequestBody CropDto cropDto) {
 		Crop crop = cropConverter.dtoToEntity(cropDto);
@@ -51,28 +55,37 @@ public class CropController {
 		header.add("Description", "Getting all crops");
 		return ResponseEntity.status(HttpStatus.OK).headers(header).body(cropsDtos);
 	}
-	
+
 	@GetMapping("/getCropMSP")
-	public ResponseEntity<CropDto> getCropMSP(@RequestParam("cropName") String cropName, @RequestParam("adminId") String adminId){
-		Crop crop = cropService.getCropMSP(cropName,adminId);
+	public ResponseEntity<CropDto> getCropMSP(@RequestParam("cropName") String cropName,
+			@RequestParam("adminId") String adminId) {
+		Crop crop = cropService.getCropMSP(cropName, adminId);
 		System.out.print(crop);
-		return new ResponseEntity<CropDto>(cropConverter.entityToDto(crop),HttpStatus.OK);
+		return new ResponseEntity<CropDto>(cropConverter.entityToDto(crop), HttpStatus.OK);
 	}
-	
+
 	@PutMapping("/updateMSP")
-	public ResponseEntity<CropDto> updateMSP(@RequestBody CropDto cropDto){
-		System.out.println(cropDto.getAdminId()+" "+cropDto.getCropMSP()+" "+cropDto.getCropName());
+	public ResponseEntity<CropDto> updateMSP(@RequestBody CropDto cropDto) {
+		System.out.println(cropDto.getAdminId() + " " + cropDto.getCropMSP() + " " + cropDto.getCropName());
 		Crop crop = cropConverter.dtoToEntity(cropDto);
 		String message = cropService.updateMSP(crop);
-		return new ResponseEntity<CropDto>(cropDto,HttpStatus.OK);
+		return new ResponseEntity<CropDto>(cropDto, HttpStatus.OK);
 	}
-	
-	@GetMapping("/getCropPrice")
-	public ResponseEntity<CropVarietyDto> getCropPriceForBuyer(@RequestParam("cropName") String cropName, @RequestParam("cropClass") 
-	String cropClass,@RequestParam("adminId") String adminId ) {
-		CropVariety cropVariety = cropService.getCropCostForBuyer(cropName, cropClass, adminId);
+
+	@GetMapping("/getCropPrice/{adminId}/{cropName}/{cropClass}")
+	public ResponseEntity<CropVarietyDto> getCropPriceForBuyer(@PathVariable("cropName") String cropName,
+			@PathVariable("cropClass") String cropClass, @PathVariable("adminId") String adminId)
+			throws ServiceException {
+		CropVariety cropVariety = null;
+		try {
+			cropVariety = cropService.getCropCostForBuyer(cropName, cropClass, adminId);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ServiceException("Crop Id Not Found");
+		}
 		CropVarietyDto cropVarietyDTO = cropVarietyConvertor.entityToDto(cropVariety);
-		return new ResponseEntity<CropVarietyDto>(cropVarietyDTO , HttpStatus.OK);
+		return new ResponseEntity<CropVarietyDto>(cropVarietyDTO, HttpStatus.OK);
 	}
-	
+
 }

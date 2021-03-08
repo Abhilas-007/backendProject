@@ -20,4 +20,11 @@ public class CropVarietyConverter {
 		CropVariety cropVariety = mapper.map(crop, CropVariety.class);
 		return cropVariety;
 	}
+	
+	public CropVariety dtoToEntity(CropVarietyDto cropVarietyDto) {
+		ModelMapper mapper = new ModelMapper();
+		CropVariety crop = mapper.map(cropVarietyDto, CropVariety.class);
+
+		return crop;
+	}
 }

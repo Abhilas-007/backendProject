@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mindtree.EMandi.exception.DatabaseConnectionFailureException;
+import com.mindtree.EMandi.exception.ServiceException;
 import com.mindtree.EMandi.modules.crop.entity.Crop;
 import com.mindtree.EMandi.modules.crop.entity.CropVariety;
 import com.mindtree.EMandi.modules.crop.repository.CropRepository;
@@ -47,29 +49,42 @@ public class CropServiceImpl implements CropService {
 	}
 
 	@Override
-	public CropVariety getCropCostForBuyer(String cropName, String cropClass, String adminId) {
-		Crop crop = cropRepo.findMSP(cropName, adminId);
+	public CropVariety getCropCostForBuyer(String cropName, String cropClass, String adminId) throws ServiceException {
+		Crop crop = null;
+		try {
+			crop = cropRepo.findMSP(cropName, adminId);
+		} catch (Exception e) {
+			System.out.println("Data Not found");
+			throw new DatabaseConnectionFailureException("Data not found");
+		}
 		int cropId = crop.getCropId();
 		return cropVarietyRepo.getBuyerCropPrice(cropId, cropClass);
 
 	}
 
 	@Override
-	public CropVariety updateCropCostForBuyer(String cropName, String cropClass, String cropPrice, String adminId) {
-		Crop crop = cropRepo.findMSP(cropName, adminId);
-		int cropId = crop.getCropId();
-		CropVariety cropVariety = cropVarietyRepo.getBuyerCropPrice(cropId, cropClass);
-		cropVariety.setBuyerCropPrice(Double.parseDouble(cropPrice));
-		cropVariety.setCrop(crop);
-		cropVariety.setCropClass(cropClass);
-		cropVariety= cropVarietyRepo.save(cropVariety);
+	public CropVariety updateCropCostForBuyer(String cropName, String cropClass, String cropPrice, String adminId)
+			throws ServiceException {
+		CropVariety cropVariety=null;
+		try {
+			Crop crop = cropRepo.findMSP(cropName, adminId);
+			int cropId = crop.getCropId();
+			cropVariety = cropVarietyRepo.getBuyerCropPrice(cropId, cropClass);
+			cropVariety.setBuyerCropPrice(Double.parseDouble(cropPrice));
+			cropVariety.setCrop(crop);
+			cropVariety.setCropClass(cropClass);
+			cropVariety = cropVarietyRepo.save(cropVariety);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw new DatabaseConnectionFailureException("Data not found");
+		}
 		return cropVariety;
 	}
 
 	@Override
 	public List<Crop> findCropByAdminId(String adminId) {
 		// TODO Auto-generated method stub
-		List<Crop> crop=cropRepo.findByAdminId(adminId);
+		List<Crop> crop = cropRepo.findByAdminId(adminId);
 		return crop;
 	}
 
