@@ -21,14 +21,17 @@ import com.mindtree.EMandi.modules.admin.converter.AdminConverter;
 import com.mindtree.EMandi.modules.admin.dto.AdminDto;
 import com.mindtree.EMandi.modules.admin.entity.Admin;
 import com.mindtree.EMandi.modules.admin.service.AdminService;
+import com.mindtree.EMandi.modules.buyer.converter.BuyerConverter;
+import com.mindtree.EMandi.modules.buyer.dto.BuyerDto;
 import com.mindtree.EMandi.modules.clerk.entity.Clerk;
 import com.mindtree.EMandi.modules.clerk.repository.ClerkRepository;
 import com.mindtree.EMandi.modules.crop.converter.CropConverter;
 import com.mindtree.EMandi.modules.crop.dto.CropDto;
 import com.mindtree.EMandi.modules.crop.entity.Crop;
 import com.mindtree.EMandi.modules.crop.service.CropService;
+import com.mindtree.EMandi.modules.farmer.converter.FarmerConverter;
+import com.mindtree.EMandi.modules.farmer.dto.FarmerDto;
 import com.mindtree.EMandi.modules.mandi.repository.MandiRepository;
-
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -36,10 +39,8 @@ import com.mindtree.EMandi.modules.mandi.repository.MandiRepository;
 public class AdminController {
 	@Autowired
 	AdminService adminService;
-
 	@Autowired
 	private AdminConverter adminConverter;
-    
     @Autowired
     private CropConverter cropConverter;
     @Autowired
@@ -48,6 +49,11 @@ public class AdminController {
     private MandiRepository mandiRepository;
     @Autowired
     private ClerkRepository clerkRepository;
+	@Autowired
+	private FarmerConverter farmerConverter;
+	@Autowired
+	private BuyerConverter buyerConverter;
+	
 	@PostMapping("/login")
 	public ResponseEntity<String> sayHello(@RequestBody Map<String, String> map) {
 		String id = adminService.validateLogin(map);
@@ -142,6 +148,45 @@ public class AdminController {
 		return clerk;
 	}
 	
+	@PostMapping("/getAllFarmersByAdminIdAndMandiPincode")
+	public ResponseEntity<List<FarmerDto>> getFarmerListByAdminIdAndMandiPincode(@RequestBody Map<String,String> input)
+	{
+		String adminId = input.get("adminId");
+		String pincode = input.get("mandiPincode");
+		int mandiPincode = Integer.parseInt(pincode);
+		List<FarmerDto> farmersDtos = null;
+		HttpHeaders header = new HttpHeaders();
+		try
+		{
+			farmersDtos = farmerConverter.entityToDtoForList(adminService.getFarmersByAdminIdAndMandiPincode(adminId, mandiPincode));
+		}
+		catch (ServiceException e) 
+		{
+			header.add("Description", "Error in getting all farmers");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(header).body(null);
+		}
+		header.add("Description", "Getting all farmers");
+		return ResponseEntity.status(HttpStatus.OK).headers(header).body(farmersDtos);
+	}
 	
-
+	@PostMapping("/getAllBuyersByAdminIdAndMandiPincode")
+	public ResponseEntity<List<BuyerDto>> getBuyerListByAdminIdAndMandiPincode(@RequestBody Map<String,String> input)
+	{
+		String adminId = input.get("adminId");
+		String pincode = input.get("mandiPincode");
+		int mandiPincode = Integer.parseInt(pincode);
+		List<BuyerDto> buyersDtos = null;
+		HttpHeaders header = new HttpHeaders();
+		try
+		{
+			buyersDtos = buyerConverter.entityToDtoForList(adminService.getBuyersByAdminIdAndMandiPincode(adminId, mandiPincode));
+		}
+		catch (ServiceException e) 
+		{
+			header.add("Description", "Error in getting all buyers");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(header).body(null);
+		}
+		header.add("Description", "Getting all buyers");
+		return ResponseEntity.status(HttpStatus.OK).headers(header).body(buyersDtos);
+	}
 }

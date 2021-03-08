@@ -11,6 +11,8 @@ import com.mindtree.EMandi.exception.ServiceException;
 import com.mindtree.EMandi.modules.admin.entity.Admin;
 import com.mindtree.EMandi.modules.admin.repository.AdminRepository;
 import com.mindtree.EMandi.modules.admin.service.AdminService;
+import com.mindtree.EMandi.modules.buyer.entity.Buyer;
+import com.mindtree.EMandi.modules.farmer.entity.Farmer;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -79,6 +81,52 @@ public class AdminServiceImpl implements AdminService {
 		}
 		return admin;
 
+	}
+
+	@Override
+	public List<Farmer> getFarmersByAdminIdAndMandiPincode(String adminId, int mandiPincode) throws ServiceException
+	{
+		List<Farmer> farmers = null;
+		try
+		{
+			farmers = adminRepo.findAllFarmersByAdminIdAndMandiPincode(adminId, mandiPincode);
+			if(farmers.isEmpty())
+			{
+				throw new ResourceNotFoundException();
+			}
+		}
+		catch (ResourceNotFoundException e) 
+		{
+			throw new ServiceException("No data found.", e);
+		} 
+		catch (Exception e) 
+		{
+			throw new ServiceException("Some exception occured while grabbing data from DB.", e);
+		}
+		return farmers;
+	}
+
+	@Override
+	public List<Buyer> getBuyersByAdminIdAndMandiPincode(String adminId, int mandiPincode) throws ServiceException
+	{
+		List<Buyer> buyers = null;
+		try
+		{
+			buyers = adminRepo.findAllBuyersByAdminIdAndMandiPincode(adminId, mandiPincode);
+			if(buyers.isEmpty())
+			{
+				throw new ResourceNotFoundException();
+			}
+		}
+		catch (ResourceNotFoundException e) 
+		{
+			throw new ServiceException("No data found.", e);
+		} 
+		catch (Exception e) 
+		{
+			throw new ServiceException("Some exception occured while grabbing data from DB.", e);
+		}
+		return buyers;
 	}
 
 }
