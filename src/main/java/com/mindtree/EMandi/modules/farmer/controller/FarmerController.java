@@ -40,13 +40,13 @@ public class FarmerController {
 	}
 
 	@PostMapping("/createFarmer")
-	public ResponseEntity<Object> addPerson(@RequestBody Farmer farmer) throws FarmerException {
+	public ResponseEntity<Integer> addPerson(@RequestBody Farmer farmer) throws FarmerException {
 		try {
 //			Employee employee = employeeConvertor.dtoToEntity(empDto);
 			Farmer farmers = farmerService.createFarmer(farmer);
 			HttpHeaders header = new HttpHeaders();
 			header.add("desc", "Farmer application");
-			return new ResponseEntity<Object>(farmers, header, HttpStatus.OK);
+			return new ResponseEntity<Integer>(farmers.getFarmerId(), header, HttpStatus.OK);
 		} catch (Exception e) {
 			System.out.println("Data not added to database");
 			throw new FarmerException("Farmer not added");
