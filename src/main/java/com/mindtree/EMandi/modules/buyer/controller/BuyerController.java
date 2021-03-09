@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mindtree.EMandi.modules.buyer.converter.BuyerConverter;
+import com.mindtree.EMandi.modules.buyer.converter.BuyerSignupConverter;
 import com.mindtree.EMandi.modules.buyer.dto.BuyerDto;
+import com.mindtree.EMandi.modules.buyer.dto.BuyerSignupCode;
 import com.mindtree.EMandi.modules.buyer.entity.Buyer;
 import com.mindtree.EMandi.modules.buyer.service.BuyerService;
 
@@ -31,7 +33,8 @@ public class BuyerController {
 
 	@Autowired
 	private BuyerService buyerService;
-
+	@Autowired
+	private BuyerSignupConverter signupconverter;
 	@PutMapping("/update")
 	public ResponseEntity<BuyerDto> updateBuyer(@RequestBody BuyerDto buyer) {
 
@@ -51,10 +54,11 @@ public class BuyerController {
 	}
 
 	@PostMapping("/add-buyer")
-	public String createEmployee(@RequestBody BuyerDto buyer) {
+	public String createEmployee(@RequestBody BuyerSignupCode buyer) {
 
-		Buyer buyer1 = buyerConverter.dtoToEntity(buyer);
+		Buyer buyer1 = signupconverter.dtoToEntity(buyer);
 		Buyer buyer2 = buyerService.saveBuyer(buyer1);
+		
 		return "Data saved";
 
 	}

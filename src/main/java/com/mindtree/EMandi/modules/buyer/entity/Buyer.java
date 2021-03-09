@@ -35,6 +35,17 @@ public class Buyer {
 		this.phoneNumber = phoneNumber;
 	}
 
+	public Buyer(int buyerId, String buyerName, String password, String phoneNumber, String securityQuestion,
+			String answer) {
+		super();
+		this.buyerId = buyerId;
+		this.buyerName = buyerName;
+		this.password = password;
+		this.phoneNumber = phoneNumber;
+		this.securityQuestion = securityQuestion;
+		this.answer = answer;
+	}
+
 	public int getBuyerId() {
 		return buyerId;
 	}
