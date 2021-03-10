@@ -54,13 +54,17 @@ public class BuyerController {
 	}
 
 	@PostMapping("/add-buyer")
-	public String createEmployee(@RequestBody BuyerSignupCode buyer) {
+	public ResponseEntity<Integer> createBuyer(@RequestBody BuyerSignupCode buyer) {
 
 		Buyer buyer1 = signupconverter.dtoToEntity(buyer);
 		Buyer buyer2 = buyerService.saveBuyer(buyer1);
 		
-		return "Data saved";
+		HttpHeaders header = new HttpHeaders();
+		header.add("desc", "Signup Request being check");
+		header.add("userType", "buyer");
+		return new ResponseEntity<Integer>(buyer2.getBuyerId(), header, HttpStatus.OK);
 
+		
 	}
 
 	@PostMapping("/login")
