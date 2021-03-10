@@ -28,21 +28,17 @@ public class CropVarietyController {
 	CropVarietyConverter cropVarietyConvertor;
 
 	@PutMapping("/updateCropPrice")
-	public ResponseEntity<CropVarietyDto> updateCropPriceForBuyer(@RequestBody Map<String, String> cropDetail)
-			throws ServiceException {
-        CropVariety cropVariety= null;
+	public ResponseEntity<Double> updateCropPriceForBuyer(@RequestBody Map<String, String> cropDetail) {
+
 		String cropName = cropDetail.get("cropName");
 		String cropClass = cropDetail.get("cropClass");
 		String cropPrice = cropDetail.get("cropPrice");
 		String adminId = cropDetail.get("adminId");
-		try {
-			 cropVariety = cropService.updateCropCostForBuyer(cropName, cropClass, cropPrice, adminId);
-		} catch (Exception e) {
-			throw new ServiceException();
-		}
+
+		CropVariety cropVariety = cropService.updateCropCostForBuyer(cropName, cropClass, cropPrice, adminId);
 
 		CropVarietyDto cropVarietyDTO = cropVarietyConvertor.entityToDto(cropVariety);
-		return new ResponseEntity<CropVarietyDto>(cropVarietyDTO, HttpStatus.OK);
+		return new ResponseEntity<Double>(cropVarietyDTO.getBuyerCropPrice(), HttpStatus.OK);
 	}
 }
 //	@PutMapping("/updateMSP")

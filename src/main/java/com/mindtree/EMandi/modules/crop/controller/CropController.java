@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mindtree.EMandi.exception.ServiceException;
 import com.mindtree.EMandi.modules.crop.converter.CropConverter;
 import com.mindtree.EMandi.modules.crop.converter.CropVarietyConverter;
 import com.mindtree.EMandi.modules.crop.dto.CropDto;
@@ -73,19 +72,13 @@ public class CropController {
 	}
 
 	@GetMapping("/getCropPrice/{adminId}/{cropName}/{cropClass}")
-	public ResponseEntity<CropVarietyDto> getCropPriceForBuyer(@PathVariable("cropName") String cropName,
-			@PathVariable("cropClass") String cropClass, @PathVariable("adminId") String adminId)
-			throws ServiceException {
-		CropVariety cropVariety = null;
-		try {
-			cropVariety = cropService.getCropCostForBuyer(cropName, cropClass, adminId);
+	public ResponseEntity<Double> getCropPriceForBuyer(@PathVariable("cropName") String cropName,
+			@PathVariable("cropClass") String cropClass, @PathVariable("adminId") String adminId) {
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ServiceException("Crop Id Not Found");
-		}
+		CropVariety cropVariety = cropService.getCropCostForBuyer(cropName, cropClass, adminId);
+
 		CropVarietyDto cropVarietyDTO = cropVarietyConvertor.entityToDto(cropVariety);
-		return new ResponseEntity<CropVarietyDto>(cropVarietyDTO, HttpStatus.OK);
+		return new ResponseEntity<Double>(cropVarietyDTO.getBuyerCropPrice(), HttpStatus.OK);
 	}
 
 }

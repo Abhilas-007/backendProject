@@ -15,9 +15,8 @@ public interface CropService {
 	
 	public String updateMSP(Crop crop);
 	
-	public CropVariety getCropCostForBuyer(String cropName, String cropClass, String adminId) throws ServiceException;
+	public CropVariety getCropCostForBuyer(String cropName, String cropClass, String adminId) ;
 
-	public CropVariety updateCropCostForBuyer(String cropName, String cropClass, String cropPrice, String adminId) throws ServiceException;
-	
+	public CropVariety updateCropCostForBuyer(String cropName, String cropClass, String cropPrice, String adminId) ;
 	public List<Crop> findCropByAdminId(String adminId);
 }

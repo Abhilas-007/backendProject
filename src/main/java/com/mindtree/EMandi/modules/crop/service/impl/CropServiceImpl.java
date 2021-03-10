@@ -49,34 +49,34 @@ public class CropServiceImpl implements CropService {
 	}
 
 	@Override
-	public CropVariety getCropCostForBuyer(String cropName, String cropClass, String adminId) throws ServiceException {
-		Crop crop = null;
-		try {
-			crop = cropRepo.findMSP(cropName, adminId);
-		} catch (Exception e) {
-			System.out.println("Data Not found");
-			throw new DatabaseConnectionFailureException("Data not found");
-		}
+	public CropVariety getCropCostForBuyer(String cropName, String cropClass, String adminId) {
+
+		Crop crop = cropRepo.findMSP(cropName, adminId);
+		System.out.println("FindMsp");
+
+		System.out.println("Data Not found");
+
 		int cropId = crop.getCropId();
+		System.out.println("cropId");
 		return cropVarietyRepo.getBuyerCropPrice(cropId, cropClass);
 
 	}
 
 	@Override
-	public CropVariety updateCropCostForBuyer(String cropName, String cropClass, String cropPrice, String adminId)
-			throws ServiceException {
+	public CropVariety updateCropCostForBuyer(String cropName, String cropClass, String cropPrice, String adminId) {
+
+		Crop crop = cropRepo.findMSP(cropName, adminId);
 		CropVariety cropVariety=null;
-		try {
-			Crop crop = cropRepo.findMSP(cropName, adminId);
+		if(crop!=null) {
 			int cropId = crop.getCropId();
-			cropVariety = cropVarietyRepo.getBuyerCropPrice(cropId, cropClass);
-			cropVariety.setBuyerCropPrice(Double.parseDouble(cropPrice));
-			cropVariety.setCrop(crop);
-			cropVariety.setCropClass(cropClass);
-			cropVariety = cropVarietyRepo.save(cropVariety);
-		} catch (Exception e) {
-			// TODO: handle exception
-			throw new DatabaseConnectionFailureException("Data not found");
+		    cropVariety = cropVarietyRepo.getBuyerCropPrice(cropId, cropClass);
+		    if(cropVariety!=null) {
+		    	cropVariety.setBuyerCropPrice(Double.parseDouble(cropPrice));
+		        cropVariety.setCrop(crop);
+				cropVariety.setCropClass(cropClass);
+				cropVariety = cropVarietyRepo.save(cropVariety);
+		    }
+			
 		}
 		return cropVariety;
 	}
