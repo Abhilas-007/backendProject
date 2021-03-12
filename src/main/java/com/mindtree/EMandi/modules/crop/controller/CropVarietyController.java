@@ -36,7 +36,9 @@ public class CropVarietyController {
 		String adminId = cropDetail.get("adminId");
 
 		CropVariety cropVariety = cropService.updateCropCostForBuyer(cropName, cropClass, cropPrice, adminId);
-
+		if (cropVariety == null) {
+			return null;
+		}
 		CropVarietyDto cropVarietyDTO = cropVarietyConvertor.entityToDto(cropVariety);
 		return new ResponseEntity<Double>(cropVarietyDTO.getBuyerCropPrice(), HttpStatus.OK);
 	}

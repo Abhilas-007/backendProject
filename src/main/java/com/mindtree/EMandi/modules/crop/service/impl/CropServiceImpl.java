@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mindtree.EMandi.exception.DataNotAddedException;
 import com.mindtree.EMandi.exception.DatabaseConnectionFailureException;
 import com.mindtree.EMandi.exception.ServiceException;
 import com.mindtree.EMandi.modules.crop.entity.Crop;
@@ -50,15 +51,19 @@ public class CropServiceImpl implements CropService {
 
 	@Override
 	public CropVariety getCropCostForBuyer(String cropName, String cropClass, String adminId) {
-
-		Crop crop = cropRepo.findMSP(cropName, adminId);
-		System.out.println("FindMsp");
-
-		System.out.println("Data Not found");
-
+		Crop crop = null;
+		try {
+			crop = cropRepo.findMSP(cropName, adminId);
+		} catch (Exception e) {
+			return null;
+		}
 		int cropId = crop.getCropId();
-		System.out.println("cropId");
-		return cropVarietyRepo.getBuyerCropPrice(cropId, cropClass);
+		try {
+			CropVariety cropPrice = cropVarietyRepo.getBuyerCropPrice(cropId, cropClass);
+			return cropPrice;
+		} catch (Exception e) {
+			return null;
+		}
 
 	}
 
@@ -66,17 +71,17 @@ public class CropServiceImpl implements CropService {
 	public CropVariety updateCropCostForBuyer(String cropName, String cropClass, String cropPrice, String adminId) {
 
 		Crop crop = cropRepo.findMSP(cropName, adminId);
-		CropVariety cropVariety=null;
-		if(crop!=null) {
+		CropVariety cropVariety = null;
+		if (crop != null) {
 			int cropId = crop.getCropId();
-		    cropVariety = cropVarietyRepo.getBuyerCropPrice(cropId, cropClass);
-		    if(cropVariety!=null) {
-		    	cropVariety.setBuyerCropPrice(Double.parseDouble(cropPrice));
-		        cropVariety.setCrop(crop);
+			cropVariety = cropVarietyRepo.getBuyerCropPrice(cropId, cropClass);
+			if (cropVariety != null) {
+				cropVariety.setBuyerCropPrice(Double.parseDouble(cropPrice));
+				cropVariety.setCrop(crop);
 				cropVariety.setCropClass(cropClass);
 				cropVariety = cropVarietyRepo.save(cropVariety);
-		    }
-			
+			}
+
 		}
 		return cropVariety;
 	}

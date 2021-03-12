@@ -76,7 +76,9 @@ public class CropController {
 			@PathVariable("cropClass") String cropClass, @PathVariable("adminId") String adminId) {
 
 		CropVariety cropVariety = cropService.getCropCostForBuyer(cropName, cropClass, adminId);
-
+		if (cropVariety == null) {
+			return null;
+		}
 		CropVarietyDto cropVarietyDTO = cropVarietyConvertor.entityToDto(cropVariety);
 		return new ResponseEntity<Double>(cropVarietyDTO.getBuyerCropPrice(), HttpStatus.OK);
 	}
