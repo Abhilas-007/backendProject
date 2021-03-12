@@ -1,9 +1,12 @@
 package com.mindtree.EMandi.modules.buyer.service.impl;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.mindtree.EMandi.exception.ServiceException;
 import com.mindtree.EMandi.modules.buyer.entity.Buyer;
 import com.mindtree.EMandi.modules.buyer.repository.BuyerRepository;
 import com.mindtree.EMandi.modules.buyer.service.BuyerService;
@@ -21,9 +24,16 @@ public class BuyerServiceImpl implements BuyerService{
 	}
 
 	@Override
-	public Buyer getBuyer(int id) {
-		// TODO Auto-generated method stub
-		return buyerRepository.findById(id).get();
+	public Buyer getBuyer(int id) throws IllegalArgumentException, NoSuchElementException{
+		Buyer buyer;
+		try {
+			 buyer=buyerRepository.findById(id).get();
+		}catch(IllegalArgumentException e) {
+			throw new IllegalArgumentException("Id is null");
+		}catch(NoSuchElementException a) {
+			throw new NoSuchElementException("No such element Present");
+		}
+		return buyer;
 	}
 
 	@Override

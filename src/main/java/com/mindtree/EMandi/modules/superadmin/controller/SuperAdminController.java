@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mindtree.EMandi.exception.ServiceException;
-import com.mindtree.EMandi.modules.admin.entity.Admin;
-import com.mindtree.EMandi.modules.buyer.entity.Buyer;
 import com.mindtree.EMandi.modules.superadmin.entity.SuperAdmin;
 import com.mindtree.EMandi.modules.superadmin.service.SuperAdminService;
 
@@ -67,4 +65,20 @@ public class SuperAdminController {
 		} else
 			return null;
 	}
+
+	@PostMapping("/addAdmin")
+	public ResponseEntity<String> addAdmin(@RequestBody Map<String, String> map) {
+		HttpHeaders header = new HttpHeaders();
+		header.add("desc", "Adding admin");
+		header.add("userType", "SuperAdmin");
+		String msg;
+		try {
+			msg = sAdminService.addAdmin(map);
+		} catch (ServiceException e) {
+			return new ResponseEntity<>(null, header, HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(msg, header, HttpStatus.OK);
+
+	}
+
 }

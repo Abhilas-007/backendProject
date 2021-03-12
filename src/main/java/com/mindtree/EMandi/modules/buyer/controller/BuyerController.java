@@ -79,7 +79,15 @@ public class BuyerController {
 
 	@GetMapping("/validate/{id}")
 	public ResponseEntity<String> validateBuyer(@PathVariable String id) {
-		Buyer buyer = buyerService.getBuyer(Integer.parseInt(id));
+		Buyer buyer;
+		try{
+			 buyer = buyerService.getBuyer(Integer.parseInt(id));
+		}catch(Exception e) {HttpHeaders header = new HttpHeaders();
+			header.add("desc", "credentials validation");
+			header.add("userType", "buyer");
+			return new ResponseEntity<>(e.getMessage() + id, header, HttpStatus.OK);
+			 
+		}
 		if (buyer != null) {
 			HttpHeaders header = new HttpHeaders();
 			header.add("desc", "credentials validation");

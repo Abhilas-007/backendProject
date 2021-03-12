@@ -1,13 +1,22 @@
 package com.mindtree.EMandi.modules.superadmin.service.impl;
 
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import com.mindtree.EMandi.exception.ServiceException;
 import com.mindtree.EMandi.modules.admin.entity.Admin;
-import com.mindtree.EMandi.modules.buyer.entity.Buyer;
+import com.mindtree.EMandi.modules.admin.repository.AdminRepository;
 import com.mindtree.EMandi.modules.superadmin.entity.SuperAdmin;
 import com.mindtree.EMandi.modules.superadmin.repository.SuperAdminRepository;
 import com.mindtree.EMandi.modules.superadmin.service.SuperAdminService;
@@ -17,6 +26,12 @@ public class SuperAdminServiceImpl implements SuperAdminService {
 
 	@Autowired
 	SuperAdminRepository sAdminRepo;
+	@Autowired
+	AdminRepository adminRepo;
+	@Autowired
+	SpringTemplateEngine tempEngine;
+	@Autowired
+	private JavaMailSender sender;
 
 	@Override
 	public String validateLogin(Map<String, String> map) {
@@ -49,5 +64,61 @@ public class SuperAdminServiceImpl implements SuperAdminService {
 		sAdminRepo.save(sAdmin);
 		return sAdmin;
 
+	}
+
+	@Override
+	public String addAdmin(Map<String, String> map) throws ServiceException {
+		String id = getAdminId();
+		Admin admin = new Admin();
+		admin.setAdminId(id);
+		admin.setEmailId(map.get("emailId"));
+		admin.setPassword(map.get("password"));
+		admin.setState(map.get("state"));
+		try {
+			admin.setsAdmin(sAdminRepo.findById(Integer.parseInt(map.get("sAdminId"))).get());
+			adminRepo.save(admin);
+		} catch (IllegalArgumentException e) {
+			throw new ServiceException("Entity is empty", e);
+		}
+		sendMail(admin);
+		return "successfully added admin";
+	}
+
+	private String getAdminId() {
+		List<Admin> listOfAdmins = adminRepo.findAll();
+		int n = listOfAdmins.size();
+		String s = "A05000";
+		if (n < 10) {
+			s += "0";
+			s += n;
+		} else
+			s += n;
+
+		return s;
+	}
+
+	@Override
+	public String sendMail(Admin admin) throws ServiceException {
+		MimeMessage message = sender.createMimeMessage();
+		try {
+		MimeMessageHelper helper=new MimeMessageHelper(message,
+				MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+		Map<String, Object> model=new HashMap<>();
+		model.put("adminId", admin.getAdminId());
+		model.put("state", admin.getState());
+		model.put("emailId" ,admin.getEmailId());
+		model.put("password", admin.getPassword());
+		
+		Context context=new Context();
+		context.setVariables(model);
+		String htmlPage=tempEngine.process("adminSignUpTemp", context);
+		helper.setTo(admin.getEmailId());
+		helper.setText(htmlPage, true);
+		helper.setSubject("Credentials for login and usage purposes ");
+		}catch(Exception e) {
+			throw new ServiceException( e.getMessage(), e);
+		}
+		sender.send(message);
+		return "sent mail";
 	}
 }
