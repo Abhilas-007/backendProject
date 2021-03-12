@@ -15,18 +15,20 @@ public class Clerk {
 	private String clerkName;
 	private String password;
 	private String mobileNumber;
+	private String emailId;
 	@OneToOne(mappedBy = "clerk")@JsonIgnore
 	private Mandi mandi;
 	
 	public Clerk() {
 	}
 	
-	public Clerk(String clerkId, String clerkName, String password, String mobileNumber) {
+	public Clerk(String clerkId, String clerkName, String password, String mobileNumber, String emailId) {
 		super();
 		this.clerkId = clerkId;
 		this.clerkName = clerkName;
 		this.password = password;
 		this.mobileNumber = mobileNumber;
+		this.emailId = emailId;
 	}
 	
 	public String getClerkId() {
@@ -59,6 +61,14 @@ public class Clerk {
 	
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
+	}
+
+	public String getEmailId() {
+		return emailId;
+	}
+
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
 	}
 	
 	

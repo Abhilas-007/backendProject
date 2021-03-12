@@ -5,6 +5,7 @@ public class ClerkDto {
 	private String clerkName;
 	private String password;
 	private String mobileNumber;
+	private String emailId;
 	public String getClerkName() {
 		return clerkName;
 	}
@@ -23,5 +24,12 @@ public class ClerkDto {
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
 	}
+	public String getEmailId() {
+		return emailId;
+	}
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+	
 	
 }

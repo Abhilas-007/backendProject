@@ -15,6 +15,7 @@ public class SuperAdmin {
 	@Id
 	private int superAdminId;
 	private String password;
+	private String emailId;
 	@OneToMany(mappedBy = "sAdmin")
 	@JsonIgnore
 	private List<Admin> admins;
@@ -51,6 +52,14 @@ public class SuperAdmin {
 
 	public void setAdmins(List<Admin> admins) {
 		this.admins = admins;
+	}
+
+	public String getEmailId() {
+		return emailId;
+	}
+
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
 	}
 	
 	
