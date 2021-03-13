@@ -20,4 +20,18 @@ public class MandiServiceImpl implements MandiService{
 		return mandi;
 	}
 
+	@Override
+	public Mandi getMandiByMandiPincode(int mandiPincode) 
+	{
+		return repository.findById(mandiPincode).orElse(null);
+	}
+
+	@Override
+	public Mandi updateMandiStorage(int mandiPincode, double storage) 
+	{
+		Mandi mandi = getMandiByMandiPincode(mandiPincode);
+		mandi.setStorage(mandi.getStorage() - storage);
+		repository.save(mandi);
+		return mandi;
+	}
 }

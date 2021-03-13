@@ -72,4 +72,10 @@ public class ClerkController {
 		} else
 			return null;
 	}
+	
+	@PostMapping("/validateFarmer")
+	public boolean validateFarmerId(@RequestBody int farmerId)
+	{
+		return clerkService.validateFarmerId(farmerId);
+	}
 }
