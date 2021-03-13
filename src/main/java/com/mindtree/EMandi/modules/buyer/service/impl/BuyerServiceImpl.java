@@ -10,6 +10,7 @@ import com.mindtree.EMandi.exception.ServiceException;
 import com.mindtree.EMandi.modules.buyer.entity.Buyer;
 import com.mindtree.EMandi.modules.buyer.repository.BuyerRepository;
 import com.mindtree.EMandi.modules.buyer.service.BuyerService;
+import com.mindtree.EMandi.modules.farmer.entity.Farmer;
 
 @Service
 public class BuyerServiceImpl implements BuyerService{
@@ -60,6 +61,17 @@ public class BuyerServiceImpl implements BuyerService{
 		buyer.setPassword(map.get("password"));
 		buyerRepository.save(buyer);
 		return buyer;
+	}
+
+	@Override
+	public String validateQA(Map<String, String> map) {
+		Buyer buyer=buyerRepository.findById(Integer.parseInt(map.get("userId"))).get();
+		if(buyer.getSecurityQuestion()==map.get("sQ")) {
+			if(buyer.getAnswer()==map.get("answer")) {
+				return "yes";
+			}
+		}
+		return null;
 	}
 
 }

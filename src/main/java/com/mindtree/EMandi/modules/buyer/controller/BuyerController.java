@@ -108,5 +108,18 @@ public class BuyerController {
 		} else
 			return null;
 	}
+	@PostMapping("/sqCheck")
+	public ResponseEntity<String> securityCheck(@RequestBody Map<String, String> map) {
+		String msg = null;
+		HttpHeaders header = new HttpHeaders();
+		header.add("desc", "credentials validation");
+		header.add("userType", "farmer");
+		try {
+			msg = buyerService.validateQA(map);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, header, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(msg, header, HttpStatus.OK);
+	}
 	
 }

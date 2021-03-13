@@ -101,22 +101,45 @@ public class SuperAdminServiceImpl implements SuperAdminService {
 	public String sendMail(Admin admin) throws ServiceException {
 		MimeMessage message = sender.createMimeMessage();
 		try {
-		MimeMessageHelper helper=new MimeMessageHelper(message,
-				MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-		Map<String, Object> model=new HashMap<>();
-		model.put("adminId", admin.getAdminId());
-		model.put("state", admin.getState());
-		model.put("emailId" ,admin.getEmailId());
-		model.put("password", admin.getPassword());
-		
-		Context context=new Context();
-		context.setVariables(model);
-		String htmlPage=tempEngine.process("adminSignUpTemp", context);
-		helper.setTo(admin.getEmailId());
-		helper.setText(htmlPage, true);
-		helper.setSubject("Credentials for login and usage purposes ");
-		}catch(Exception e) {
-			throw new ServiceException( e.getMessage(), e);
+			MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+					StandardCharsets.UTF_8.name());
+			Map<String, Object> model = new HashMap<>();
+			model.put("adminId", admin.getAdminId());
+			model.put("state", admin.getState());
+			model.put("emailId", admin.getEmailId());
+			model.put("password", admin.getPassword());
+
+			Context context = new Context();
+			context.setVariables(model);
+			String htmlPage = tempEngine.process("adminSignUpTemp", context);
+			helper.setTo(admin.getEmailId());
+			helper.setText(htmlPage, true);
+			helper.setSubject("Credentials for login and usage purposes ");
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage(), e);
+		}
+		sender.send(message);
+		return "sent mail";
+	}
+
+	@Override
+	public String passwordMail(Map<String, String> map) throws ServiceException {
+		MimeMessage message = sender.createMimeMessage();
+		try {
+			SuperAdmin sAdmin = sAdminRepo.findById(Integer.parseInt(map.get("userId"))).get();
+			MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+					StandardCharsets.UTF_8.name());
+			Map<String, Object> model = new HashMap<>();
+			model.put("password", sAdmin.getPassword());
+
+			Context context = new Context();
+			context.setVariables(model);
+			String htmlPage = tempEngine.process("passwordTemp", context);
+			helper.setTo(sAdmin.getEmailId());
+			helper.setText(htmlPage, true);
+			helper.setSubject("Password for logging into the system");
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage(), e);
 		}
 		sender.send(message);
 		return "sent mail";

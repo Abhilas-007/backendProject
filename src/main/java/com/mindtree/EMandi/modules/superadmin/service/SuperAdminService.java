@@ -17,4 +17,6 @@ public interface SuperAdminService {
 	public String addAdmin(Map<String, String> map) throws ServiceException;
 	
 	public String sendMail(Admin admin) throws ServiceException;
+	
+	public String passwordMail(Map<String, String> map) throws ServiceException;
 }

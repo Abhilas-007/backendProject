@@ -189,4 +189,19 @@ public class AdminController {
 		header.add("Description", "Getting all buyers");
 		return ResponseEntity.status(HttpStatus.OK).headers(header).body(buyersDtos);
 	}
+	
+	@PostMapping("/passwordMail")
+	public ResponseEntity<String> mailPassword(@RequestBody Map<String, String> map){
+		HttpHeaders header = new HttpHeaders();
+		header.add("desc", "sending password in mail");
+		header.add("userType", "Admin");
+		String msg;
+		try {
+			msg = adminService.passwordMail(map);
+		} catch (ServiceException e) {
+			return new ResponseEntity<>(null, header, HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(msg, header, HttpStatus.OK);
+
+	}
 }

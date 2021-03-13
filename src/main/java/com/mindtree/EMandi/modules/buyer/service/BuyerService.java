@@ -16,4 +16,6 @@ public interface BuyerService {
 	public String validateLogin( Map<String, String> map);
 	
 	public Buyer updatePassword(Map<String, String> map);
+	
+	public String validateQA(Map<String, String> map);
 }

@@ -80,5 +80,20 @@ public class SuperAdminController {
 		return new ResponseEntity<>(msg, header, HttpStatus.OK);
 
 	}
+	
+	@PostMapping("/passwordMail")
+	public ResponseEntity<String> mailPassword(@RequestBody Map<String, String> map){
+		HttpHeaders header = new HttpHeaders();
+		header.add("desc", "sending password in mail");
+		header.add("userType", "SuperAdmin");
+		String msg;
+		try {
+			msg = sAdminService.passwordMail(map);
+		} catch (ServiceException e) {
+			return new ResponseEntity<>(null, header, HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(msg, header, HttpStatus.OK);
+
+	}
 
 }

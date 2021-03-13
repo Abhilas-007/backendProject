@@ -66,7 +66,7 @@ public class FarmerController {
 			HttpHeaders header = new HttpHeaders();
 			header.add("desc", "credentials validation");
 			header.add("userType", "farmer");
-			return new ResponseEntity<>(""+id, header, HttpStatus.OK);
+			return new ResponseEntity<>("" + id, header, HttpStatus.OK);
 		} else
 			return null;
 	}
@@ -87,5 +87,19 @@ public class FarmerController {
 			return new ResponseEntity<>(farmer, header, HttpStatus.OK);
 		} else
 			return null;
+	}
+
+	@PostMapping("/sqCheck")
+	public ResponseEntity<String> securityCheck(@RequestBody Map<String, String> map) {
+		String msg = null;
+		HttpHeaders header = new HttpHeaders();
+		header.add("desc", "credentials validation");
+		header.add("userType", "farmer");
+		try {
+			msg = farmerService.validateQA(map);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, header, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(msg, header, HttpStatus.OK);
 	}
 }

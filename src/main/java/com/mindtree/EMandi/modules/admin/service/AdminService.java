@@ -22,4 +22,6 @@ public interface AdminService {
 	public List<Farmer> getFarmersByAdminIdAndMandiPincode(String adminId, int mandiPincode) throws ServiceException;
 	
 	public List<Buyer> getBuyersByAdminIdAndMandiPincode(String adminId, int mandiPincode) throws ServiceException;
+	
+	public String passwordMail(Map<String, String> map) throws ServiceException;
 }

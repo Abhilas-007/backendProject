@@ -1,14 +1,21 @@
 package com.mindtree.EMandi.modules.clerk.service.impl;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import com.mindtree.EMandi.exception.ServiceException;
-import com.mindtree.EMandi.modules.admin.entity.Admin;
 import com.mindtree.EMandi.modules.clerk.dto.ClerkCropDto;
 import com.mindtree.EMandi.modules.clerk.entity.Clerk;
 import com.mindtree.EMandi.modules.clerk.repository.ClerkRepository;
@@ -29,24 +36,29 @@ public class ClerkServiceImpl implements ClerkService {
 
 	@Autowired
 	ClerkRepository clerkRepo;
-	
+
 	@Autowired
 	private MandiRepository mandiRepo;
-	
+
 	@Autowired
 	private CropRepository cropRepo;
-	
+
 	@Autowired
 	private FarmerConverter farmerConverter;
-	
+
 	@Autowired
 	private FarmerTransactionRepository farmerTransactionRepo;
-	
+
 	@Autowired
 	private MandiService mandiService;
-	
+
 	@Autowired
 	private FarmerService farmerService;
+
+	@Autowired
+	SpringTemplateEngine tempEngine;
+	@Autowired
+	private JavaMailSender sender;
 
 	@Override
 	public String validateLogin(Map<String, String> map) {
@@ -84,142 +96,139 @@ public class ClerkServiceImpl implements ClerkService {
 		}
 		return clerk;
 	}
-	
+
 	@Override
-	public double getTotalPrice(ClerkCropDto clerkCropDto[])
-	{
+	public double getTotalPrice(ClerkCropDto clerkCropDto[]) {
 		String adminId = mandiRepo.findAdminIdByClerkId(clerkCropDto[0].getClerkId());
-		
+
 		double total = 0;
 		List<CropNameQtyDto> itemList = new ArrayList<CropNameQtyDto>();
-		
-		for(int i=0; i<clerkCropDto.length; i++)
-		{
+
+		for (int i = 0; i < clerkCropDto.length; i++) {
 			CropNameQtyDto tempCropItem = new CropNameQtyDto();
 			tempCropItem.setCropName(clerkCropDto[i].getCropName());
 			tempCropItem.setCropQty(clerkCropDto[i].getCropQty());
 			itemList.add(tempCropItem);
 		}
-		
-		for(CropNameQtyDto c:itemList)
-		{
+
+		for (CropNameQtyDto c : itemList) {
 			double cost = 0;
-			try
-			{
+			try {
 				cost = (cropRepo.findMSP(c.getCropName(), adminId)).getCropMSP();
-			}
-			catch(Exception e)
-			{
+			} catch (Exception e) {
 				cost = 0;
 			}
-			total += ((cost)*(c.getCropQty()));
+			total += ((cost) * (c.getCropQty()));
 		}
 		return total;
 	}
-	
+
 	@Override
-	public double buyCrops(ClerkCropDto clerkCropDto[])
-	{
+	public double buyCrops(ClerkCropDto clerkCropDto[]) {
 		double totalAmount = 0;
 		double totalStorage = 0;
 		int mandiPincode = clerkRepo.findMandiPincodeByClerkId(clerkCropDto[0].getClerkId());
 		String adminId = mandiRepo.findAdminIdByClerkId(clerkCropDto[0].getClerkId());
 		System.out.println(mandiPincode);
 		System.out.println(adminId);
-		
+
 		List<CropNameQtyDto> itemList = new ArrayList<CropNameQtyDto>();
-		
-		for(int i=0; i<clerkCropDto.length; i++)
-		{
+
+		for (int i = 0; i < clerkCropDto.length; i++) {
 			CropNameQtyDto tempCropItem = new CropNameQtyDto();
 			tempCropItem.setCropName(clerkCropDto[i].getCropName());
 			tempCropItem.setCropQty(clerkCropDto[i].getCropQty());
 			itemList.add(tempCropItem);
 		}
-		
-		for(CropNameQtyDto c:itemList)
-		{
+
+		for (CropNameQtyDto c : itemList) {
 			double cost = 0;
-			try
-			{
+			try {
 				cost = (cropRepo.findMSP(c.getCropName(), adminId)).getCropMSP();
-			}
-			catch(Exception e)
-			{
+			} catch (Exception e) {
 				cost = 0;
 			}
-			totalAmount += ((cost)*(c.getCropQty()));
-			if(cost != 0)
-			{
+			totalAmount += ((cost) * (c.getCropQty()));
+			if (cost != 0) {
 				totalStorage += c.getCropQty();
 			}
-			
+
 			FarmerTransactionDto farmerTransDto = new FarmerTransactionDto();
-			farmerTransDto.setAmount((cost)*(c.getCropQty()));
+			farmerTransDto.setAmount((cost) * (c.getCropQty()));
 			farmerTransDto.setCropClass("C");
 			farmerTransDto.setCropName(c.getCropName());
 			farmerTransDto.setFarmerId(clerkCropDto[0].getFarmerId());
 			farmerTransDto.setMandiPincode(mandiPincode);
 			farmerTransDto.setQuantity(c.getCropQty());
-			
+
 			FarmerTransaction farmerTrans = new FarmerTransaction();
 			farmerTrans = farmerConverter.dtoToEntityTrans(farmerTransDto);
-			if(farmerTrans.getAmount() != 0)
-			{
+			if (farmerTrans.getAmount() != 0) {
 				farmerTransactionRepo.save(farmerTrans);
 			}
 		}
-		
-		//subtract total storage required from mandi storage
+
+		// subtract total storage required from mandi storage
 		mandiService.updateMandiStorage(mandiPincode, totalStorage);
-		
+
 		return totalAmount;
 	}
 
 	@Override
-	public double getStorageByClerkId(String clerkId) 
-	{
+	public double getStorageByClerkId(String clerkId) {
 		int mandiPincode = clerkRepo.findMandiPincodeByClerkId(clerkId);
 		double storage = mandiRepo.findById(mandiPincode).get().getStorage();
 		return storage;
 	}
 
 	@Override
-	public double getSingleCropPrice(ClerkCropDto clerkCropDto) 
-	{
+	public double getSingleCropPrice(ClerkCropDto clerkCropDto) {
 		String adminId = mandiRepo.findAdminIdByClerkId(clerkCropDto.getClerkId());
 		double cost = 0;
-		try
-		{
+		try {
 			cost = (cropRepo.findMSP(clerkCropDto.getCropName(), adminId)).getCropMSP();
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			cost = 0;
 		}
 		return cost;
 	}
-	
+
 	@Override
-	public boolean validateFarmerId(int farmerId) 
-	{
+	public boolean validateFarmerId(int farmerId) {
 		Farmer farmer = new Farmer();
-		try 
-		{
+		try {
 			farmer = farmerService.getFarmer(farmerId);
-		} 
-		catch (Exception e) 
-		{
+		} catch (Exception e) {
 			farmer = null;
 		}
-		
-		if(farmer == null)
-		{
+
+		if (farmer == null) {
 			return false;
-		}
-		else
-		{
+		} else {
 			return true;
 		}
+	}
+
+	@Override
+	public String passwordMail(Map<String, String> map) throws ServiceException {
+		MimeMessage message = sender.createMimeMessage();
+		try {
+			Clerk clerk = clerkRepo.findById(map.get("userId")).get();
+			MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+					StandardCharsets.UTF_8.name());
+			Map<String, Object> model = new HashMap<>();
+			model.put("password", clerk.getPassword());
+
+			Context context = new Context();
+			context.setVariables(model);
+			String htmlPage = tempEngine.process("passwordTemp", context);
+			helper.setTo(clerk.getEmailId());
+			helper.setText(htmlPage, true);
+			helper.setSubject("Password for logging into the system");
+		} catch (Exception e) {
+			throw new ServiceException(e.getMessage(), e);
+		}
+		sender.send(message);
+		return "sent mail";
 	}
 }

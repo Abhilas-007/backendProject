@@ -15,4 +15,6 @@ public interface FarmerService {
 	public Farmer getFarmer(int id) throws FarmerException;
 
 	public Farmer updatePassword(Map<String, String> map) throws FarmerException;
+	
+	public String validateQA(Map<String, String> map) throws FarmerException;
 }
