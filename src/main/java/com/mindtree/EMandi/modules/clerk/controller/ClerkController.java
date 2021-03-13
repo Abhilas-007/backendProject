@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mindtree.EMandi.exception.ServiceException;
 import com.mindtree.EMandi.modules.admin.entity.Admin;
+import com.mindtree.EMandi.modules.clerk.dto.ClerkCropDto;
 import com.mindtree.EMandi.modules.clerk.entity.Clerk;
 import com.mindtree.EMandi.modules.clerk.service.ClerkService;
 
@@ -71,6 +72,38 @@ public class ClerkController {
 			return new ResponseEntity<>(clerk, header, HttpStatus.OK);
 		} else
 			return null;
+	}
+	
+	@PostMapping("/getTotalPrice") 
+	public double getTotalPrice(@RequestBody ClerkCropDto clerkCropDto[])
+	{
+		double total = 0;
+		try {
+			total = clerkService.getTotalPrice(clerkCropDto);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return total;
+	}
+	
+	@PostMapping("/buyCrops")
+	public double buyCrops(@RequestBody ClerkCropDto clerkCropDto[])
+	{
+		return clerkService.buyCrops(clerkCropDto);
+	}
+	
+	@PostMapping("/getStorage")
+	public double getStorageByClerkId(@RequestBody String clerkId)
+	{
+		return clerkService.getStorageByClerkId(clerkId);
+	}
+	
+	@PostMapping("/getSingleCropPrice")
+	public double getSingleCropPrice(@RequestBody ClerkCropDto clerkCropDto)
+	{
+		return clerkService.getSingleCropPrice(clerkCropDto);
 	}
 	
 	@PostMapping("/validateFarmer")
