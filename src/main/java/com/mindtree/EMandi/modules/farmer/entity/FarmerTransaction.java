@@ -21,7 +21,8 @@ public class FarmerTransaction {
 	private String cropClass;
 	private double quantity;
 	private double amount;
-	private Date date;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date date = new Date();
 	@ManyToOne
 	@JoinColumn(name = "farmerId")
 	private Farmer farmer;
