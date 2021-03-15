@@ -69,8 +69,8 @@ public class FarmerServiceImpl implements FarmerService {
 	@Override
 	public String validateQA(Map<String, String> map) throws FarmerException {
 		Farmer farmer=farmerRepo.findById(Integer.parseInt(map.get("userId"))).get();
-		if(farmer.getSecurityQuestion()==map.get("sQ")) {
-			if(farmer.getAnswer()==map.get("answer")) {
+		if(farmer.getSecurityQuestion().equalsIgnoreCase(map.get("sQ"))) {
+			if(farmer.getAnswer().equalsIgnoreCase(map.get("answer"))) {
 				return "yes";
 			}
 		}

@@ -98,8 +98,11 @@ public class FarmerController {
 		try {
 			msg = farmerService.validateQA(map);
 		} catch (Exception e) {
-			return new ResponseEntity<>(null, header, HttpStatus.OK);
+			return new ResponseEntity<>(null, header, HttpStatus.BAD_REQUEST);
 		}
+		if(msg==null)
+			return new ResponseEntity<>("security question didnt match", header, HttpStatus.NOT_FOUND);
+		else
 		return new ResponseEntity<>(msg, header, HttpStatus.OK);
 	}
 }

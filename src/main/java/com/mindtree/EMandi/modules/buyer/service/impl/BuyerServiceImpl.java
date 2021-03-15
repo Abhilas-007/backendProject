@@ -66,8 +66,9 @@ public class BuyerServiceImpl implements BuyerService{
 	@Override
 	public String validateQA(Map<String, String> map) {
 		Buyer buyer=buyerRepository.findById(Integer.parseInt(map.get("userId"))).get();
-		if(buyer.getSecurityQuestion()==map.get("sQ")) {
-			if(buyer.getAnswer()==map.get("answer")) {
+		if(buyer.getSecurityQuestion().equalsIgnoreCase(map.get("sQ"))) {
+			if(buyer.getAnswer().equalsIgnoreCase(map.get("answer"))) {
+				System.out.println(buyer.getAnswer()+"&"+ map.get("answer"));
 				return "yes";
 			}
 		}
