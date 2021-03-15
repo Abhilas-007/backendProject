@@ -1,6 +1,8 @@
 package com.mindtree.EMandi.modules.farmer.service.impl;
 
+import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,9 +32,16 @@ public class FarmerServiceImpl implements FarmerService {
 
 	@Override
 	public Farmer createFarmer(Farmer farmer) throws DataNotAddedException {
-
-		try {
-			return farmerRepo.save(farmer);
+          List<Farmer> farmerList= farmerRepo.findAll();
+		 Predicate<Farmer> farmerPredicatec = f-> f.getAadharNumber().equals(farmer.getAadharNumber());
+			try {
+				for (Farmer farmer2 : farmerList) {
+					System.out.println(farmer2.toString());
+					if(farmerPredicatec.test(farmer2)) {
+						return null;
+					}
+				}
+				return farmerRepo.save(farmer);
 
 		} catch (Exception e) {
 			throw new DataNotAddedException("Data is not added");

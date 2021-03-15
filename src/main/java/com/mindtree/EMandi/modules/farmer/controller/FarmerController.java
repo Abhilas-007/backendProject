@@ -44,6 +44,9 @@ public class FarmerController {
 		try {
 //			Employee employee = employeeConvertor.dtoToEntity(empDto);
 			Farmer farmers = farmerService.createFarmer(farmer);
+			if(farmers==null) {
+				return null;
+			}
 			HttpHeaders header = new HttpHeaders();
 			header.add("desc", "Farmer application");
 			return new ResponseEntity<Integer>(farmers.getFarmerId(), header, HttpStatus.OK);
