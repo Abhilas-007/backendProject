@@ -152,4 +152,16 @@ public class AdminServiceImpl implements AdminService {
 		return "sent mail";
 	}
 
+	@Override
+	public Admin getAdminByState(String state) throws ServiceException {
+		Admin admin=null;
+		try {
+			admin=adminRepo.findAdminByState(state);
+		} catch (IllegalArgumentException e) {
+			throw new ServiceException("No data found for that id", e);
+		}
+
+		return admin;
+	}
+
 }

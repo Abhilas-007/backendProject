@@ -16,4 +16,6 @@ public interface AdminRepository extends JpaRepository<Admin, String>
 	
 	@Query("SELECT b FROM Buyer b WHERE b.buyerId IN (SELECT t.buyer.buyerId FROM BuyerTransaction t WHERE t.mandi.mandiPincode IN (SELECT m FROM Mandi m WHERE m.admin.adminId = ?1 AND m.mandiPincode = ?2))")
 	List<Buyer> findAllBuyersByAdminIdAndMandiPincode(String adminId, int mandiPincode);
+	
+	Admin findAdminByState(String state);
 }

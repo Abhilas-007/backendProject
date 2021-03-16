@@ -1,5 +1,8 @@
 package com.mindtree.EMandi.modules.mandi.service.impl;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +35,13 @@ public class MandiServiceImpl implements MandiService{
 		Mandi mandi = getMandiByMandiPincode(mandiPincode);
 		mandi.setStorage(mandi.getStorage() - storage);
 		repository.save(mandi);
+		return mandi;
+	}
+
+	@Override
+	public Set<Mandi> getMandiByAdminId(String adminId) {
+		Set<Mandi> mandi=null;
+		mandi=repository.findMandiByAdminId(adminId).stream().collect(Collectors.toSet());
 		return mandi;
 	}
 }

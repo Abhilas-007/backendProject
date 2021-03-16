@@ -237,4 +237,25 @@ public class AdminController {
 		return new ResponseEntity<ClerkDto>(clerkConverter.entityToDto(clerk1), HttpStatus.OK);
 
 	}
+
+	
+	@GetMapping("/getAdminByState")
+	public ResponseEntity<AdminDto> getAdminByState(@RequestBody Map<String,String> map){
+		Admin admin;
+		AdminDto adminDto;
+		try {
+			admin = adminService.getAdminByState(map.get("state"));
+		} catch (ServiceException e) {
+			return null;
+		}
+		if (admin != null) {
+			adminDto=adminConverter.entityToDto(admin);
+			HttpHeaders header = new HttpHeaders();
+			header.add("desc", "Admin Found");
+			header.add("userType", "admin");
+			return new ResponseEntity<>(adminDto, header, HttpStatus.OK);
+		} else
+			return null;
+		
+	}
 }

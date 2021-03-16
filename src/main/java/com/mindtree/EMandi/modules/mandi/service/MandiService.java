@@ -1,5 +1,7 @@
 package com.mindtree.EMandi.modules.mandi.service;
 
+import java.util.Set;
+
 import com.mindtree.EMandi.modules.mandi.entity.Mandi;
 
 public interface MandiService {
@@ -9,4 +11,6 @@ public interface MandiService {
 	Mandi getMandiByMandiPincode(int mandiPincode);
 	
 	Mandi updateMandiStorage(int mandiPincode, double storage);
+	
+	Set<Mandi> getMandiByAdminId(String adminId);
 }
