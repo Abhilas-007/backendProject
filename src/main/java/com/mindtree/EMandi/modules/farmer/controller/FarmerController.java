@@ -126,18 +126,5 @@ public class FarmerController {
 
 		
 	}
-//	@GetMapping("/getfarmer/{id}")
-//	public ResponseEntity<FarmerDto> getFarmer(@PathVariable int id){
-//		Farmer farmer = null;
-//		try {
-//			farmer = farmerService.getFarmer(id);
-//		} catch (FarmerException e) {
-//			return null;
-//		}
-//
-//		return new ResponseEntity<FarmerDto>(FarmerConverter.entityToDto(farmer), HttpStatus.OK);
-//	
-//
-//		
-//	}
+
 }
