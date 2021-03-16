@@ -17,10 +17,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mindtree.EMandi.modules.buyer.converter.BuyerConverter;
+import com.mindtree.EMandi.modules.buyer.converter.BuyerRequestConverter;
 import com.mindtree.EMandi.modules.buyer.converter.BuyerSignupConverter;
 import com.mindtree.EMandi.modules.buyer.dto.BuyerDto;
+import com.mindtree.EMandi.modules.buyer.dto.BuyerRequestDto;
 import com.mindtree.EMandi.modules.buyer.dto.BuyerSignupCode;
 import com.mindtree.EMandi.modules.buyer.entity.Buyer;
+import com.mindtree.EMandi.modules.buyer.entity.BuyerRequest;
+import com.mindtree.EMandi.modules.buyer.repository.BuyerRequestRepository;
 import com.mindtree.EMandi.modules.buyer.service.BuyerService;
 
 @RestController
@@ -35,6 +39,10 @@ public class BuyerController {
 	private BuyerService buyerService;
 	@Autowired
 	private BuyerSignupConverter signupconverter;
+	@Autowired
+	private BuyerRequestConverter requestConverter;
+	@Autowired
+	private BuyerRequestRepository requestRep;
 	@PutMapping("/update")
 	public ResponseEntity<BuyerDto> updateBuyer(@RequestBody BuyerDto buyer) {
 
@@ -125,4 +133,17 @@ public class BuyerController {
 		return new ResponseEntity<>(msg, header, HttpStatus.OK);
 	}
 	
+	@PostMapping("/add-buyerRequest")
+	public ResponseEntity<BuyerRequestDto> createBuyerRequest(@RequestBody BuyerRequestDto buyer) {
+
+		BuyerRequest buyer1 = requestConverter.dtoToEntity(buyer);
+		BuyerRequest buyer2 = requestRep.save(buyer1);
+		BuyerRequestDto buyer3=requestConverter.entityToDto(buyer2);
+		HttpHeaders header = new HttpHeaders();
+		header.add("desc", "Signup Request being check");
+		header.add("userType", "buyer");
+		return new ResponseEntity<BuyerRequestDto>(buyer3, header, HttpStatus.OK);
+
+		
+	}
 }

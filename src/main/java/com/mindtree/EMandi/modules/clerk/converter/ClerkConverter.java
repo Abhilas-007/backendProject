@@ -1,11 +1,12 @@
 package com.mindtree.EMandi.modules.clerk.converter;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
 import com.mindtree.EMandi.modules.clerk.dto.ClerkDto;
 import com.mindtree.EMandi.modules.clerk.entity.Clerk;
 
-
+@Component
 public class ClerkConverter {
 public Clerk dtoToEntity(ClerkDto clerkDto) {
 		
