@@ -17,7 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mindtree.EMandi.exception.FarmerException;
 import com.mindtree.EMandi.exception.ServiceException;
+import com.mindtree.EMandi.modules.buyer.dto.BuyerDto;
+import com.mindtree.EMandi.modules.buyer.entity.Buyer;
 import com.mindtree.EMandi.modules.clerk.entity.Clerk;
+import com.mindtree.EMandi.modules.farmer.converter.FarmerConverter;
+import com.mindtree.EMandi.modules.farmer.dto.FarmerDto;
 import com.mindtree.EMandi.modules.farmer.entity.Farmer;
 import com.mindtree.EMandi.modules.farmer.service.FarmerService;
 
@@ -107,5 +111,19 @@ public class FarmerController {
 			return new ResponseEntity<>("security question didnt match", header, HttpStatus.NOT_FOUND);
 		else
 		return new ResponseEntity<>(msg, header, HttpStatus.OK);
+	}
+	@GetMapping("/getfarmer/{id}")
+	public ResponseEntity<FarmerDto> getFarmer(@PathVariable int id){
+		Farmer farmer = null;
+		try {
+			farmer = farmerService.getFarmer(id);
+		} catch (FarmerException e) {
+			return null;
+		}
+
+		return new ResponseEntity<FarmerDto>(FarmerConverter.entityToDto(farmer), HttpStatus.OK);
+	
+
+		
 	}
 }

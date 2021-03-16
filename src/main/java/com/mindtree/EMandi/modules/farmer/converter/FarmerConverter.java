@@ -14,14 +14,14 @@ import com.mindtree.EMandi.modules.farmer.entity.FarmerTransaction;
 @Component
 public class FarmerConverter 
 {
-	public FarmerDto entityToDto(Farmer farmer) 
+	public static FarmerDto entityToDto(Farmer farmer) 
 	{
 		ModelMapper mapper = new ModelMapper();
 		FarmerDto farmerDto = mapper.map(farmer, FarmerDto.class);
 		return farmerDto;
 	}
 
-	public Farmer dtoToEntity(FarmerDto farmerDto) 
+	public static Farmer dtoToEntity(FarmerDto farmerDto) 
 	{
 		ModelMapper mapper = new ModelMapper();
 		Farmer farmer = mapper.map(farmerDto, Farmer.class);
