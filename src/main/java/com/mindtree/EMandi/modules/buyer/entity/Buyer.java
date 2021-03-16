@@ -1,5 +1,6 @@
 package com.mindtree.EMandi.modules.buyer.entity;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -23,6 +24,8 @@ public class Buyer {
 	private String answer;
 	@OneToMany(mappedBy = "buyer")@JsonIgnore
 	private Set<BuyerTransaction> buyerTransactions;
+	@OneToMany(mappedBy = "buyer")@JsonIgnore
+	private List<BuyerRequest> requests;
 	
 	public Buyer() {
 	}

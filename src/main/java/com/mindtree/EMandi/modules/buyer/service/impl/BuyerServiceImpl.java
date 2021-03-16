@@ -21,6 +21,8 @@ public class BuyerServiceImpl implements BuyerService{
 	@Override
 	public void updateBuyer(Buyer buyer) {
 		// TODO Auto-generated method stub
+		buyer.setAnswer(buyerRepository.findById(buyer.getBuyerId()).get().getAnswer());
+		buyer.setSecurityQuestion(buyerRepository.findById(buyer.getBuyerId()).get().getSecurityQuestion());
 		buyerRepository.save(buyer);
 	}
 
