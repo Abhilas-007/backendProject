@@ -76,8 +76,14 @@ public class SuperAdminServiceImpl implements SuperAdminService {
 		admin.setState(map.get("state"));
 		try {
 			admin.setsAdmin(sAdminRepo.findById(Integer.parseInt(map.get("sAdminId"))).get());
+			List<Admin> admins = adminRepo.findAll();
+			for (Admin a : admins) {
+				if (admin.getEmailId().equalsIgnoreCase(a.getEmailId()))
+					throw new ServiceException("already existing data");
+			}
+
 			adminRepo.save(admin);
-		} catch (IllegalArgumentException e) {
+		} catch (Exception e) {
 			throw new ServiceException("Entity is empty", e);
 		}
 		sendMail(admin);
