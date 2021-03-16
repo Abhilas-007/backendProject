@@ -46,4 +46,9 @@ public class FarmerConverter
 		FarmerTransaction farmerTrans = mapper.map(farmerTransDto, FarmerTransaction.class);
 		return farmerTrans;
 	}
+	public List<FarmerTransactionDto> entityToDtoForListTrans(List<FarmerTransaction> farmer1) 
+	{
+		return farmer1.stream().map(x -> entityToDtoTrans(x)).collect(Collectors.toList());
+	}
+	
 }

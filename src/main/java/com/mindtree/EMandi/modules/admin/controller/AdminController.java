@@ -23,8 +23,12 @@ import com.mindtree.EMandi.modules.admin.entity.Admin;
 import com.mindtree.EMandi.modules.admin.service.AdminService;
 import com.mindtree.EMandi.modules.buyer.converter.BuyerConverter;
 import com.mindtree.EMandi.modules.buyer.dto.BuyerDto;
+import com.mindtree.EMandi.modules.buyer.entity.Buyer;
+import com.mindtree.EMandi.modules.clerk.converter.ClerkConverter;
+import com.mindtree.EMandi.modules.clerk.dto.ClerkDto;
 import com.mindtree.EMandi.modules.clerk.entity.Clerk;
 import com.mindtree.EMandi.modules.clerk.repository.ClerkRepository;
+import com.mindtree.EMandi.modules.clerk.service.ClerkService;
 import com.mindtree.EMandi.modules.crop.converter.CropConverter;
 import com.mindtree.EMandi.modules.crop.dto.CropDto;
 import com.mindtree.EMandi.modules.crop.entity.Crop;
@@ -53,7 +57,10 @@ public class AdminController {
 	private FarmerConverter farmerConverter;
 	@Autowired
 	private BuyerConverter buyerConverter;
-	
+	@Autowired
+	private ClerkService clerkservice;
+	@Autowired
+	private ClerkConverter clerkConverter;
 	@PostMapping("/login")
 	public ResponseEntity<String> sayHello(@RequestBody Map<String, String> map) {
 		String id = adminService.validateLogin(map);
@@ -202,6 +209,32 @@ public class AdminController {
 			return new ResponseEntity<>(null, header, HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(msg, header, HttpStatus.OK);
+
+	}
+	@GetMapping("/getClerkById/{clerkId}")
+	public ResponseEntity<ClerkDto> getClerk(@PathVariable String clerkId ) {
+
+		Clerk clerk=null;
+		HttpHeaders header = new HttpHeaders();
+		try {
+			clerk = clerkservice.getClerk(clerkId);
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			header.add("Description", "Error in getting all buyers");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(header).body(null);
+		}
+		header.add("Description", "Getting all farmers");
+		return ResponseEntity.status(HttpStatus.OK).headers(header).body(clerkConverter.entityToDto(clerk));
+		
+	}
+	@PutMapping("/updateclerk")
+	public ResponseEntity<ClerkDto> updateclerk(@RequestBody ClerkDto clerk) {
+
+		Clerk clerk1 = clerkConverter.dtoToEntity(clerk);
+		
+		clerkRepository.save(clerk1);
+
+		return new ResponseEntity<ClerkDto>(clerkConverter.entityToDto(clerk1), HttpStatus.OK);
 
 	}
 }

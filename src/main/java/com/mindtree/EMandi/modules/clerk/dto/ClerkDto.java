@@ -1,11 +1,18 @@
 package com.mindtree.EMandi.modules.clerk.dto;
 
 public class ClerkDto {
- 
+    private String clerkId;
 	private String clerkName;
 	private String password;
 	private String mobileNumber;
 	private String emailId;
+	
+	public String getClerkId() {
+		return clerkId;
+	}
+	public void setClerkId(String clerkId) {
+		this.clerkId = clerkId;
+	}
 	public String getClerkName() {
 		return clerkName;
 	}
