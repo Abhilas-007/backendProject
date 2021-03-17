@@ -18,4 +18,7 @@ public interface MandiRepository extends JpaRepository<Mandi,Integer>{
 	
 	@Query("select m from Mandi m where m.admin.adminId=?1")
 	List<Mandi> findMandiByAdminId(String adminId);
+	
+	@Query("select m.mandiPincode from Mandi m where m.clerk.clerkId=?1")
+	int getMandiPincode(String clerkId);
 }

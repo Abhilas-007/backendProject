@@ -13,4 +13,8 @@ public interface FarmerTransactionRepository extends JpaRepository<FarmerTransac
 {
 	@Query("select c from FarmerTransaction c where c.mandi.mandiPincode=?1")
 	List<FarmerTransaction> findByMandiPincode(int mandiCode);
+	
+	@Query("select distinct f.farmer.farmerId from FarmerTransaction f where f.mandi.mandiPincode=?1")
+	List<Integer> getFarmerIds(int mandiPincode);
+	
 }

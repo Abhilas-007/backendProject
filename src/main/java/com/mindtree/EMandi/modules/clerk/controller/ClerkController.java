@@ -1,5 +1,6 @@
 package com.mindtree.EMandi.modules.clerk.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mindtree.EMandi.exception.ServiceException;
@@ -125,5 +127,10 @@ public class ClerkController {
 		}
 		return new ResponseEntity<>(msg, header, HttpStatus.OK);
 
+	}
+	
+	@GetMapping("/farmers")
+	public ResponseEntity<List<Integer>> getFarmerIds(@RequestParam("clerkId") String clerkId){
+		return new ResponseEntity<List<Integer>>(clerkService.getFarmerIds(clerkId),HttpStatus.OK);
 	}
 }

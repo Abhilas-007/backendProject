@@ -1,5 +1,6 @@
 package com.mindtree.EMandi.modules.clerk.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.mindtree.EMandi.exception.ServiceException;
@@ -25,4 +26,6 @@ public interface ClerkService {
 	public boolean validateFarmerId(int farmerId);
 	
 	public String passwordMail(Map<String, String> map) throws ServiceException;
+	
+	public List<Integer> getFarmerIds(String clerkId);
 }

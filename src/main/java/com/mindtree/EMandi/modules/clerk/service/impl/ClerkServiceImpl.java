@@ -231,4 +231,12 @@ public class ClerkServiceImpl implements ClerkService {
 		sender.send(message);
 		return "sent mail";
 	}
+
+	@Override
+	public List<Integer> getFarmerIds(String clerkId) {
+		// TODO Auto-generated method stub
+		int mandiPincode = mandiRepo.getMandiPincode(clerkId);
+		
+		return farmerTransactionRepo.getFarmerIds(mandiPincode);
+	}
 }
