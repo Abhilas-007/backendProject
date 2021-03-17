@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.mindtree.EMandi.exception.DataNotAddedException;
 import com.mindtree.EMandi.exception.FarmerException;
+import com.mindtree.EMandi.exception.service.FarmersServiceException;
 import com.mindtree.EMandi.modules.farmer.entity.Farmer;
 import com.mindtree.EMandi.modules.farmer.repository.FarmerRepository;
 import com.mindtree.EMandi.modules.farmer.service.FarmerService;
@@ -84,6 +85,54 @@ public class FarmerServiceImpl implements FarmerService {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public String updateFarmerProfile(Farmer farmerDetails, Farmer farmer) throws FarmersServiceException {
+		System.out.println(farmer.getFarmerName());
+		int count =0;
+		if(!farmerDetails.getAccountNumber().equals(farmer.getAccountNumber())) {
+			farmerDetails.setAccountNumber(farmer.getAccountNumber());
+		}
+		else {
+			count++;
+		}
+		if(!farmerDetails.getAnswer().equals(farmer.getAnswer())) {
+			farmerDetails.setAnswer(farmer.getAnswer());
+		}else {
+			count++;
+		}
+		if(!farmerDetails.getBankName().equals(farmer.getBankName())) {
+			farmerDetails.setBankName(farmer.getBankName());
+		}else {
+			count++;
+		}
+		if(!farmerDetails.getIfsc().equals(farmer.getIfsc())) {
+			farmerDetails.setIfsc(farmer.getIfsc());
+		}else {
+			count++;
+		}
+		if(!farmerDetails.getFarmerName().equals(farmer.getFarmerName())) {
+			farmerDetails.setFarmerName(farmer.getFarmerName());
+		}else {
+			count++;
+		}
+		if(!farmerDetails.getMobileNumber().equals(farmer.getMobileNumber())) {
+			farmerDetails.setMobileNumber(farmer.getMobileNumber());
+		}else {
+			count++;
+		}
+		if(!farmerDetails.getPassword().equals(farmer.getPassword())) {
+			farmerDetails.setPassword(farmer.getPassword());
+		}else {
+			count++;
+		}
+		if(count==7){
+			return null;
+		}else {
+			farmerRepo.save(farmerDetails);
+		}
+		return "Updated SuccessFully";
 	}
 	
 	

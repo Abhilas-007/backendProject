@@ -126,5 +126,18 @@ public class FarmerController {
 
 		
 	}
-
+    @PutMapping("/updateFarmer")
+    public ResponseEntity<String> updateFarmerProfile(@RequestBody Farmer farmer) throws FarmerException{
+    	Farmer farmerDetails = null;
+    	int farmerId= farmer.getFarmerId();
+    	try {
+			 farmerDetails= farmerService.getFarmer(farmerId);
+		} catch (FarmerException e) {
+			return null;
+		}
+    	HttpHeaders header = new HttpHeaders();
+		header.add("desc", "Farmer application");
+    	String updateFarmer= farmerService.updateFarmerProfile(farmerDetails, farmer);
+    	return new ResponseEntity<String>(updateFarmer,header, HttpStatus.OK);
+    }
 }

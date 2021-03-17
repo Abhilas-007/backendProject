@@ -3,6 +3,7 @@ package com.mindtree.EMandi.modules.farmer.service;
 import java.util.Map;
 
 import com.mindtree.EMandi.exception.FarmerException;
+import com.mindtree.EMandi.exception.service.FarmersServiceException;
 import com.mindtree.EMandi.modules.clerk.entity.Clerk;
 import com.mindtree.EMandi.modules.farmer.entity.Farmer;
 
@@ -17,4 +18,6 @@ public interface FarmerService {
 	public Farmer updatePassword(Map<String, String> map) throws FarmerException;
 	
 	public String validateQA(Map<String, String> map) throws FarmerException;
+
+	public String updateFarmerProfile(Farmer farmerDetails, Farmer farmer) throws FarmersServiceException;
 }
