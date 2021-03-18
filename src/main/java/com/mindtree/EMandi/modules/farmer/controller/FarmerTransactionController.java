@@ -10,12 +10,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mindtree.EMandi.exception.FarmerException;
+import com.mindtree.EMandi.exception.service.FarmerTransactionServiceException;
 import com.mindtree.EMandi.modules.farmer.converter.FarmerConverter;
+import com.mindtree.EMandi.modules.farmer.dto.ExtraCreditDto;
 import com.mindtree.EMandi.modules.farmer.dto.FarmerTransactionDto;
 import com.mindtree.EMandi.modules.farmer.dto.FarmerTransactionDto1;
 import com.mindtree.EMandi.modules.farmer.dto.TransactionDto;
@@ -63,4 +68,43 @@ public class FarmerTransactionController {
 		return new ResponseEntity<List<FarmerTransactionDto1>>(converter.entityToDto(transactions),HttpStatus.OK);
 	}
 	
+	@PostMapping("/checkForTransactonId")
+	public ResponseEntity<Boolean> checkForTransactionId(@RequestBody int transactionId)
+	{
+		boolean op = false;
+		try
+		{
+			op = farmerService.checkForTransactionId(transactionId);
+			HttpHeaders header = new HttpHeaders();
+			header.add("Description", "Checking transaction ID validation");
+			return ResponseEntity.status(HttpStatus.OK).headers(header).body(op);
+		}
+		catch(FarmerTransactionServiceException e)
+		{
+			op = false;
+			HttpHeaders header = new HttpHeaders();
+			header.add("Description", "Checking transaction ID validation");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(header).body(op);
+		}
+	}
+	
+	@PutMapping("/creditExtraAmount")
+	public ResponseEntity<Boolean> creditExtraAmount(@RequestBody ExtraCreditDto extraCreditDto)
+	{
+		boolean op = false;
+		try
+		{
+			op = farmerService.creditExtraAmount(extraCreditDto);
+			HttpHeaders header = new HttpHeaders();
+			header.add("Description", "Updating transaction details");
+			return ResponseEntity.status(HttpStatus.OK).headers(header).body(op);
+		}
+		catch(FarmerTransactionServiceException e)
+		{
+			op = false;
+			HttpHeaders header = new HttpHeaders();
+			header.add("Description", "Updating transaction details");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(header).body(op);
+		}
+	}
 }

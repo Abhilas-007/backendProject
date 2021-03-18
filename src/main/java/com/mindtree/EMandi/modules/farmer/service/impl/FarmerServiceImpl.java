@@ -9,7 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.mindtree.EMandi.exception.DataNotAddedException;
 import com.mindtree.EMandi.exception.FarmerException;
+import com.mindtree.EMandi.exception.service.FarmerTransactionServiceException;
 import com.mindtree.EMandi.exception.service.FarmersServiceException;
+import com.mindtree.EMandi.modules.crop.repository.CropRepository;
+import com.mindtree.EMandi.modules.crop.repository.CropVarietyRepository;
+import com.mindtree.EMandi.modules.farmer.dto.ExtraCreditDto;
 import com.mindtree.EMandi.modules.farmer.entity.Farmer;
 import com.mindtree.EMandi.modules.farmer.entity.FarmerTransaction;
 import com.mindtree.EMandi.modules.farmer.repository.FarmerRepository;
@@ -24,10 +28,16 @@ public class FarmerServiceImpl implements FarmerService {
 	FarmerRepository farmerRepo;
 	
 	@Autowired
-	MandiRepository mandiRepo;
+	private MandiRepository mandiRepo;
 	
 	@Autowired
 	FarmerTransactionRepository transactionRepo;
+	
+	@Autowired
+	private CropRepository cropRepo;
+	
+	@Autowired
+	private CropVarietyRepository cropVarietyRepo;
 
 	@Override
 	public String validateLogin(Map<String, String> map) {
@@ -151,5 +161,80 @@ public class FarmerServiceImpl implements FarmerService {
 		return transactionRepo.getTransactions(farmerId, mandiPincode);
 	}
 	
-	
+	@Override
+	public boolean checkForTransactionId(int transactionId) throws FarmerTransactionServiceException 
+	{
+		FarmerTransaction farmerTrans = new FarmerTransaction();
+		try
+		{
+			farmerTrans = transactionRepo.findById(transactionId).orElse(null);
+		}
+		catch(Exception e)
+		{
+			throw new FarmerTransactionServiceException("Something went wrong while grabbing data.",e);
+		}
+		if(farmerTrans == null)
+		{
+			return false;
+		}
+		else
+		{
+			String cropClass = farmerTrans.getCropClass();
+			if(cropClass.equals("C"))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
+
+	@Override
+	public boolean creditExtraAmount(ExtraCreditDto extraCreditDto) throws FarmerTransactionServiceException 
+	{
+		int transactionId = extraCreditDto.getTransactionId();
+		String cropClass = extraCreditDto.getCropClass();
+		FarmerTransaction farmerTransaction = new FarmerTransaction();
+		try
+		{
+			farmerTransaction = transactionRepo.findById(transactionId).orElse(null);
+		}
+		catch(Exception e)
+		{
+			throw new FarmerTransactionServiceException("Something went wrong while grabbing data.",e);
+		}
+		if(farmerTransaction != null)
+		{
+			try
+			{
+				int mandiPincode = farmerTransaction.getMandi().getMandiPincode();
+				double cropQty = farmerTransaction.getQuantity();
+				double presentAmount = farmerTransaction.getAmount();
+				String adminId = mandiRepo.getAdminIdByMandiPincode(mandiPincode);
+				String cropName = farmerTransaction.getCropName();
+				int cropId = cropRepo.getCropIdByAdminIdAndCropName(adminId, cropName);
+				double cropQualityPrice = cropVarietyRepo.findCropQualityPrice(cropId, cropClass).getCropQualityPrice();
+				
+				double extraAmount = cropQty * cropQualityPrice;
+				double newAmount = presentAmount + extraAmount;
+				
+				farmerTransaction.setAmount(newAmount);
+				farmerTransaction.setCropClass(cropClass);
+			
+				transactionRepo.save(farmerTransaction);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				throw new FarmerTransactionServiceException("Something went wrong while updating data.",e);
+			}
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.mindtree.EMandi.exception.FarmerException;
+import com.mindtree.EMandi.exception.service.FarmerTransactionServiceException;
 import com.mindtree.EMandi.exception.service.FarmersServiceException;
 import com.mindtree.EMandi.modules.clerk.entity.Clerk;
+import com.mindtree.EMandi.modules.farmer.dto.ExtraCreditDto;
 import com.mindtree.EMandi.modules.farmer.entity.Farmer;
 import com.mindtree.EMandi.modules.farmer.entity.FarmerTransaction;
 
@@ -25,5 +27,8 @@ public interface FarmerService {
 	
 	public List<FarmerTransaction> getTransactions(String clerkId, int farmerId);
 	
+	public boolean checkForTransactionId(int transactionId) throws FarmerTransactionServiceException;
+	
+	public boolean creditExtraAmount(ExtraCreditDto extraCreditDto) throws FarmerTransactionServiceException;
 }
 
