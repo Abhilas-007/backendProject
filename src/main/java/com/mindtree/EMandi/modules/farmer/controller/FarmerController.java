@@ -23,6 +23,7 @@ import com.mindtree.EMandi.modules.buyer.entity.Buyer;
 import com.mindtree.EMandi.modules.clerk.entity.Clerk;
 import com.mindtree.EMandi.modules.farmer.converter.FarmerConverter;
 import com.mindtree.EMandi.modules.farmer.dto.FarmerDto;
+import com.mindtree.EMandi.modules.farmer.dto.FarmerDto1;
 import com.mindtree.EMandi.modules.farmer.entity.Farmer;
 import com.mindtree.EMandi.modules.farmer.repository.FarmerRepository;
 import com.mindtree.EMandi.modules.farmer.service.FarmerService;
@@ -36,7 +37,7 @@ public class FarmerController {
 	FarmerService farmerService;
 	
 	@Autowired
-	FarmerRepository farmerRepo;
+	FarmerConverter converter;
 
 	@PostMapping("/login")
 	public ResponseEntity<String> sayHello(@RequestBody Map<String, String> map) {
@@ -146,8 +147,15 @@ public class FarmerController {
     	return new ResponseEntity<String>(updateFarmer,header, HttpStatus.OK);
     }
     
-    @GetMapping("/name")
-    public ResponseEntity<String> getName(@RequestParam("farmerId") int farmerId){
-    	return new ResponseEntity<String>(farmerRepo.getFarmerName(farmerId),HttpStatus.OK);
+    @GetMapping("/details")
+    public ResponseEntity<FarmerDto1> getName(@RequestParam("farmerId") int farmerId){
+    	Farmer farmer = null;
+		try {
+			farmer = farmerService.getFarmer(farmerId);
+		} catch (FarmerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return new ResponseEntity<FarmerDto1>(converter.entityToDto1(farmer),HttpStatus.OK);
     }
 }

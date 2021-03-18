@@ -24,5 +24,6 @@ public interface FarmerService {
 	public String updateFarmerProfile(Farmer farmerDetails, Farmer farmer) throws FarmersServiceException;
 	
 	public List<FarmerTransaction> getTransactions(String clerkId, int farmerId);
+	
 }
 

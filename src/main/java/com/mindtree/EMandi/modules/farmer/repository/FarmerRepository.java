@@ -7,6 +7,6 @@ import com.mindtree.EMandi.modules.farmer.entity.Farmer;
 
 public interface FarmerRepository extends JpaRepository<Farmer, Integer>{
 	
-	@Query("select f.farmerName from Farmer f where f.farmerId=?1")
-	String getFarmerName(int farmerId);
+	@Query("select f from Farmer f where f.farmerId=?1")
+	Farmer getFarmer(int farmerId);
 }
