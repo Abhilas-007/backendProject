@@ -11,13 +11,16 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mindtree.EMandi.modules.farmer.converter.FarmerConverter;
 import com.mindtree.EMandi.modules.farmer.dto.FarmerTransactionDto;
+import com.mindtree.EMandi.modules.farmer.dto.FarmerTransactionDto1;
 import com.mindtree.EMandi.modules.farmer.dto.TransactionDto;
 import com.mindtree.EMandi.modules.farmer.entity.FarmerTransaction;
 import com.mindtree.EMandi.modules.farmer.repository.FarmerTransactionRepository;
+import com.mindtree.EMandi.modules.farmer.service.FarmerService;
 
 
 
@@ -30,6 +33,8 @@ public class FarmerTransactionController {
 	private FarmerConverter converter;
 	@Autowired
 	private FarmerTransactionRepository rep;
+	@Autowired
+	private FarmerService farmerService;
 	@GetMapping("/getAllCrops/{mandiPincode}")
 	public ResponseEntity<List<FarmerTransactionDto>> getAllCrops(@PathVariable (value="mandiPincode") int mandiPincode) {
 		List<FarmerTransaction> farmer=rep.findByMandiPincode(mandiPincode);
@@ -48,6 +53,12 @@ public class FarmerTransactionController {
 		HttpHeaders header = new HttpHeaders();
 		header.add("Description", "Getting all transaction details");
 		return ResponseEntity.status(HttpStatus.OK).headers(header).body(transactionDtos);
+	}
+	
+	@GetMapping("/byId")
+	public ResponseEntity<List<FarmerTransactionDto1>> getTransactions(@RequestParam("clerkId") String clerkId, @RequestParam("farmerId") int farmerId){
+		List<FarmerTransaction> transactions = farmerService.getTransactions(clerkId, farmerId);
+		return new ResponseEntity<List<FarmerTransactionDto1>>(converter.entityToDto(transactions),HttpStatus.OK);
 	}
 	
 }

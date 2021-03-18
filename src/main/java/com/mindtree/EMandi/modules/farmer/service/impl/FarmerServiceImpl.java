@@ -11,14 +11,23 @@ import com.mindtree.EMandi.exception.DataNotAddedException;
 import com.mindtree.EMandi.exception.FarmerException;
 import com.mindtree.EMandi.exception.service.FarmersServiceException;
 import com.mindtree.EMandi.modules.farmer.entity.Farmer;
+import com.mindtree.EMandi.modules.farmer.entity.FarmerTransaction;
 import com.mindtree.EMandi.modules.farmer.repository.FarmerRepository;
+import com.mindtree.EMandi.modules.farmer.repository.FarmerTransactionRepository;
 import com.mindtree.EMandi.modules.farmer.service.FarmerService;
+import com.mindtree.EMandi.modules.mandi.repository.MandiRepository;
 
 @Service
 public class FarmerServiceImpl implements FarmerService {
 
 	@Autowired
 	FarmerRepository farmerRepo;
+	
+	@Autowired
+	MandiRepository mandiRepo;
+	
+	@Autowired
+	FarmerTransactionRepository transactionRepo;
 
 	@Override
 	public String validateLogin(Map<String, String> map) {
@@ -133,6 +142,13 @@ public class FarmerServiceImpl implements FarmerService {
 			farmerRepo.save(farmerDetails);
 		}
 		return "Updated SuccessFully";
+	}
+
+	@Override
+	public List<FarmerTransaction> getTransactions(String clerkId, int farmerId) {
+		// TODO Auto-generated method stub
+		int mandiPincode = mandiRepo.getMandiPincode(clerkId);
+		return transactionRepo.getTransactions(farmerId, mandiPincode);
 	}
 	
 	
