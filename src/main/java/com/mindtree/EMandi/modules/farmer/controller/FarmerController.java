@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mindtree.EMandi.exception.FarmerException;
@@ -23,6 +24,7 @@ import com.mindtree.EMandi.modules.clerk.entity.Clerk;
 import com.mindtree.EMandi.modules.farmer.converter.FarmerConverter;
 import com.mindtree.EMandi.modules.farmer.dto.FarmerDto;
 import com.mindtree.EMandi.modules.farmer.entity.Farmer;
+import com.mindtree.EMandi.modules.farmer.repository.FarmerRepository;
 import com.mindtree.EMandi.modules.farmer.service.FarmerService;
 
 @RestController
@@ -32,6 +34,9 @@ public class FarmerController {
 
 	@Autowired
 	FarmerService farmerService;
+	
+	@Autowired
+	FarmerRepository farmerRepo;
 
 	@PostMapping("/login")
 	public ResponseEntity<String> sayHello(@RequestBody Map<String, String> map) {
@@ -139,5 +144,10 @@ public class FarmerController {
 		header.add("desc", "Farmer application");
     	String updateFarmer= farmerService.updateFarmerProfile(farmerDetails, farmer);
     	return new ResponseEntity<String>(updateFarmer,header, HttpStatus.OK);
+    }
+    
+    @GetMapping("/name")
+    public ResponseEntity<String> getName(@RequestParam("farmerId") int farmerId){
+    	return new ResponseEntity<String>(farmerRepo.getFarmerName(farmerId),HttpStatus.OK);
     }
 }

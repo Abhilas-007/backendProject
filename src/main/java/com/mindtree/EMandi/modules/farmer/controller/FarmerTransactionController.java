@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mindtree.EMandi.exception.FarmerException;
 import com.mindtree.EMandi.modules.farmer.converter.FarmerConverter;
 import com.mindtree.EMandi.modules.farmer.dto.FarmerTransactionDto;
 import com.mindtree.EMandi.modules.farmer.dto.FarmerTransactionDto1;
 import com.mindtree.EMandi.modules.farmer.dto.TransactionDto;
+import com.mindtree.EMandi.modules.farmer.entity.Farmer;
 import com.mindtree.EMandi.modules.farmer.entity.FarmerTransaction;
 import com.mindtree.EMandi.modules.farmer.repository.FarmerTransactionRepository;
 import com.mindtree.EMandi.modules.farmer.service.FarmerService;

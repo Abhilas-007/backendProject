@@ -59,6 +59,5 @@ public class FarmerTransactionDto1 {
 	public void setAmount(double amount) {
 		this.amount = amount;
 	}
-	
-	
+
 }
