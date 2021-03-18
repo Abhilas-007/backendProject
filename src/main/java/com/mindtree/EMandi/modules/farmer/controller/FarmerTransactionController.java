@@ -1,5 +1,6 @@
 package com.mindtree.EMandi.modules.farmer.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mindtree.EMandi.modules.farmer.converter.FarmerConverter;
 import com.mindtree.EMandi.modules.farmer.dto.FarmerTransactionDto;
+import com.mindtree.EMandi.modules.farmer.dto.TransactionDto;
 import com.mindtree.EMandi.modules.farmer.entity.FarmerTransaction;
 import com.mindtree.EMandi.modules.farmer.repository.FarmerTransactionRepository;
 
@@ -36,4 +38,16 @@ public class FarmerTransactionController {
 		header.add("Description", "Getting all crops");
 		return ResponseEntity.status(HttpStatus.OK).headers(header).body(farmerDtos);
 	}
+	@GetMapping("/{id}")
+	public ResponseEntity<List<TransactionDto>> getTransactions(@PathVariable int id) {
+		List<FarmerTransaction> transactions=rep.findByFarmerId(id);
+		List<TransactionDto> transactionDtos = new ArrayList<>();
+		for(FarmerTransaction f:transactions) {
+			transactionDtos.add(converter.transactionToDtoTrans(f));
+		}
+		HttpHeaders header = new HttpHeaders();
+		header.add("Description", "Getting all transaction details");
+		return ResponseEntity.status(HttpStatus.OK).headers(header).body(transactionDtos);
+	}
+	
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.mindtree.EMandi.modules.farmer.dto.FarmerDto;
 import com.mindtree.EMandi.modules.farmer.dto.FarmerTransactionDto;
+import com.mindtree.EMandi.modules.farmer.dto.TransactionDto;
 import com.mindtree.EMandi.modules.farmer.entity.Farmer;
 import com.mindtree.EMandi.modules.farmer.entity.FarmerTransaction;
 
@@ -49,6 +50,12 @@ public class FarmerConverter
 	public List<FarmerTransactionDto> entityToDtoForListTrans(List<FarmerTransaction> farmer1) 
 	{
 		return farmer1.stream().map(x -> entityToDtoTrans(x)).collect(Collectors.toList());
+	}
+	public TransactionDto transactionToDtoTrans(FarmerTransaction farmerTrans) 
+	{
+		ModelMapper mapper = new ModelMapper();
+		TransactionDto TransDto = mapper.map(farmerTrans,TransactionDto.class);
+		return TransDto;
 	}
 	
 }
