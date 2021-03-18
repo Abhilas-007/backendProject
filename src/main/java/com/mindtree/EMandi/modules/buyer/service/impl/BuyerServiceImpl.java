@@ -1,5 +1,6 @@
 package com.mindtree.EMandi.modules.buyer.service.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -8,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.mindtree.EMandi.exception.ServiceException;
 import com.mindtree.EMandi.modules.buyer.entity.Buyer;
+import com.mindtree.EMandi.modules.buyer.entity.BuyerTransaction;
 import com.mindtree.EMandi.modules.buyer.repository.BuyerRepository;
+import com.mindtree.EMandi.modules.buyer.repository.BuyerTransactionRepository;
 import com.mindtree.EMandi.modules.buyer.service.BuyerService;
 import com.mindtree.EMandi.modules.farmer.entity.Farmer;
 
@@ -18,6 +21,9 @@ public class BuyerServiceImpl implements BuyerService{
 	@Autowired
 	private BuyerRepository buyerRepository;
 
+	@Autowired
+	private BuyerTransactionRepository buyerTransactionRepo;
+	
 	@Override
 	public void updateBuyer(Buyer buyer) {
 		// TODO Auto-generated method stub
@@ -75,6 +81,12 @@ public class BuyerServiceImpl implements BuyerService{
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public List<BuyerTransaction> getTransactions(int id) {
+		
+		return buyerTransactionRepo.findByBuyerId(id);
 	}
 
 }
