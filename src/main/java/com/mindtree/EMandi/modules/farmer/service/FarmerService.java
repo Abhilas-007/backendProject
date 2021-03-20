@@ -16,7 +16,7 @@ public interface FarmerService {
 
 	public String validateLogin(Map<String, String> map);
 
-	Farmer createFarmer(Farmer farmer) throws FarmerException;
+	Farmer createFarmer(Farmer farmer) throws FarmersServiceException;
 
 	public Farmer getFarmer(int id) throws FarmerException;
 

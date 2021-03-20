@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mindtree.EMandi.exception.ServiceException;
+import com.mindtree.EMandi.exception.service.BuyerServiceException;
+import com.mindtree.EMandi.exception.service.DataNotFoundException;
 import com.mindtree.EMandi.modules.buyer.entity.Buyer;
 import com.mindtree.EMandi.modules.buyer.entity.BuyerTransaction;
 import com.mindtree.EMandi.modules.buyer.repository.BuyerRepository;
@@ -84,9 +86,13 @@ public class BuyerServiceImpl implements BuyerService{
 	}
 
 	@Override
-	public List<BuyerTransaction> getTransactions(int id) {
+	public List<BuyerTransaction> getTransactions(int id) throws BuyerServiceException {
+		try {
+			return buyerTransactionRepo.findByBuyerId(id);
+		} catch (Exception e) {
+			throw new DataNotFoundException("Data not founded.");
+		}
 		
-		return buyerTransactionRepo.findByBuyerId(id);
 	}
 
 }

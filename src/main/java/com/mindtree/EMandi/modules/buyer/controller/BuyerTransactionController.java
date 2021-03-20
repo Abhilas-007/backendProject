@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mindtree.EMandi.exception.BuyerException;
 import com.mindtree.EMandi.modules.buyer.converter.BuyerTransactionConverter;
 import com.mindtree.EMandi.modules.buyer.dto.BuyerTransactionDto;
 import com.mindtree.EMandi.modules.buyer.entity.BuyerTransaction;
@@ -30,10 +31,14 @@ public class BuyerTransactionController {
 	BuyerTransactionConverter buyerConvertor;
 
 	@GetMapping("getTransactions/{id}")
-	public ResponseEntity<List<BuyerTransactionDto>> getTransactions(@PathVariable int id) {
+	public ResponseEntity<List<BuyerTransactionDto>> getTransactions(@PathVariable int id) throws BuyerException {
 		List<BuyerTransaction> transactions = buyerService.getTransactions(id);
-
+		boolean isEmpty= transactions.isEmpty();
+		if (isEmpty==true) {
+		return null;
+		}
 		List<BuyerTransactionDto> transactionDtos = new ArrayList<>();
+
 		for (BuyerTransaction buyer : transactions) {
 			transactionDtos.add(buyerConvertor.transactionToDto(buyer));
 		}
