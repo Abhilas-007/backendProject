@@ -6,6 +6,7 @@ import java.util.Map;
 import com.mindtree.EMandi.exception.ServiceException;
 import com.mindtree.EMandi.modules.admin.entity.Admin;
 import com.mindtree.EMandi.modules.buyer.entity.Buyer;
+import com.mindtree.EMandi.modules.crop.dto.CropVarietyDto;
 import com.mindtree.EMandi.modules.farmer.entity.Farmer;
 
 public interface AdminService {
@@ -26,4 +27,6 @@ public interface AdminService {
 	public String passwordMail(Map<String, String> map) throws ServiceException;
 	
 	public Admin getAdminByState(String state) throws ServiceException;
+	
+	public CropVarietyDto getCropVarietyDto(Map<String, String> map) throws ServiceException;
 }

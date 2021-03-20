@@ -17,15 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mindtree.EMandi.exception.FarmerException;
-import com.mindtree.EMandi.exception.ServiceException;
-import com.mindtree.EMandi.modules.buyer.dto.BuyerDto;
-import com.mindtree.EMandi.modules.buyer.entity.Buyer;
-import com.mindtree.EMandi.modules.clerk.entity.Clerk;
 import com.mindtree.EMandi.modules.farmer.converter.FarmerConverter;
 import com.mindtree.EMandi.modules.farmer.dto.FarmerDto;
 import com.mindtree.EMandi.modules.farmer.dto.FarmerDto1;
 import com.mindtree.EMandi.modules.farmer.entity.Farmer;
-import com.mindtree.EMandi.modules.farmer.repository.FarmerRepository;
 import com.mindtree.EMandi.modules.farmer.service.FarmerService;
 
 @RestController
@@ -35,7 +30,7 @@ public class FarmerController {
 
 	@Autowired
 	FarmerService farmerService;
-	
+
 	@Autowired
 	FarmerConverter converter;
 
@@ -54,7 +49,7 @@ public class FarmerController {
 		try {
 //			Employee employee = employeeConvertor.dtoToEntity(empDto);
 			Farmer farmers = farmerService.createFarmer(farmer);
-			if(farmers==null) {
+			if (farmers == null) {
 				return null;
 			}
 			HttpHeaders header = new HttpHeaders();
@@ -113,13 +108,14 @@ public class FarmerController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, header, HttpStatus.BAD_REQUEST);
 		}
-		if(msg==null)
+		if (msg == null)
 			return new ResponseEntity<>("security question didnt match", header, HttpStatus.NOT_FOUND);
 		else
-		return new ResponseEntity<>(msg, header, HttpStatus.OK);
+			return new ResponseEntity<>(msg, header, HttpStatus.OK);
 	}
+
 	@GetMapping("/getfarmer/{id}")
-	public ResponseEntity<FarmerDto> getFarmer(@PathVariable int id){
+	public ResponseEntity<FarmerDto> getFarmer(@PathVariable int id) {
 		Farmer farmer = null;
 		try {
 			farmer = farmerService.getFarmer(id);
@@ -128,34 +124,32 @@ public class FarmerController {
 		}
 
 		return new ResponseEntity<FarmerDto>(FarmerConverter.entityToDto(farmer), HttpStatus.OK);
-	
 
-		
 	}
-    @PutMapping("/updateFarmer")
-    public ResponseEntity<String> updateFarmerProfile(@RequestBody Farmer farmer) throws FarmerException{
-    	Farmer farmerDetails = null;
-    	int farmerId= farmer.getFarmerId();
-    	try {
-			 farmerDetails= farmerService.getFarmer(farmerId);
+
+	@PutMapping("/updateFarmer")
+	public ResponseEntity<String> updateFarmerProfile(@RequestBody Farmer farmer) throws FarmerException {
+		Farmer farmerDetails = null;
+		int farmerId = farmer.getFarmerId();
+		try {
+			farmerDetails = farmerService.getFarmer(farmerId);
 		} catch (FarmerException e) {
 			return null;
 		}
-    	HttpHeaders header = new HttpHeaders();
+		HttpHeaders header = new HttpHeaders();
 		header.add("desc", "Farmer application");
-    	String updateFarmer= farmerService.updateFarmerProfile(farmerDetails, farmer);
-    	return new ResponseEntity<String>(updateFarmer,header, HttpStatus.OK);
-    }
-    
-    @GetMapping("/details")
-    public ResponseEntity<FarmerDto1> getName(@RequestParam("farmerId") int farmerId){
-    	Farmer farmer = null;
+		String updateFarmer = farmerService.updateFarmerProfile(farmerDetails, farmer);
+		return new ResponseEntity<String>(updateFarmer, header, HttpStatus.OK);
+	}
+
+	@GetMapping("/details")
+	public ResponseEntity<FarmerDto1> getName(@RequestParam("farmerId") int farmerId) {
+		Farmer farmer = null;
 		try {
 			farmer = farmerService.getFarmer(farmerId);
 		} catch (FarmerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	return new ResponseEntity<FarmerDto1>(converter.entityToDto1(farmer),HttpStatus.OK);
-    }
+		return new ResponseEntity<FarmerDto1>(converter.entityToDto1(farmer), HttpStatus.OK);
+	}
 }

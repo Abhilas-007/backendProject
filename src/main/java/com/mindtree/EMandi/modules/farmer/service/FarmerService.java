@@ -11,6 +11,7 @@ import com.mindtree.EMandi.modules.farmer.dto.ExtraCreditDto;
 import com.mindtree.EMandi.modules.farmer.entity.Farmer;
 import com.mindtree.EMandi.modules.farmer.entity.FarmerTransaction;
 
+
 public interface FarmerService {
 
 	public String validateLogin(Map<String, String> map);
@@ -20,15 +21,17 @@ public interface FarmerService {
 	public Farmer getFarmer(int id) throws FarmerException;
 
 	public Farmer updatePassword(Map<String, String> map) throws FarmerException;
-	
+
 	public String validateQA(Map<String, String> map) throws FarmerException;
 
 	public String updateFarmerProfile(Farmer farmerDetails, Farmer farmer) throws FarmersServiceException;
-	
-	public List<FarmerTransaction> getTransactions(String clerkId, int farmerId);
-	
-	public boolean checkForTransactionId(int transactionId) throws FarmerTransactionServiceException;
-	
-	public boolean creditExtraAmount(ExtraCreditDto extraCreditDto) throws FarmerTransactionServiceException;
-}
 
+	public List<FarmerTransaction> getTransactions(String clerkId, int farmerId);
+
+	public boolean checkForTransactionId(int transactionId) throws FarmerTransactionServiceException;
+
+	public boolean creditExtraAmount(ExtraCreditDto extraCreditDto) throws FarmerTransactionServiceException;
+	
+	
+	public List<FarmerTransaction> getTransactions(int id) throws FarmersServiceException;
+}

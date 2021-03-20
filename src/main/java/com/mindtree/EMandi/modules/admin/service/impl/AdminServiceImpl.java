@@ -20,6 +20,12 @@ import com.mindtree.EMandi.modules.admin.entity.Admin;
 import com.mindtree.EMandi.modules.admin.repository.AdminRepository;
 import com.mindtree.EMandi.modules.admin.service.AdminService;
 import com.mindtree.EMandi.modules.buyer.entity.Buyer;
+import com.mindtree.EMandi.modules.crop.converter.CropVarietyConverter;
+import com.mindtree.EMandi.modules.crop.dto.CropVarietyDto;
+import com.mindtree.EMandi.modules.crop.entity.Crop;
+import com.mindtree.EMandi.modules.crop.entity.CropVariety;
+import com.mindtree.EMandi.modules.crop.repository.CropRepository;
+import com.mindtree.EMandi.modules.crop.repository.CropVarietyRepository;
 import com.mindtree.EMandi.modules.farmer.entity.Farmer;
 
 @Service
@@ -31,6 +37,12 @@ public class AdminServiceImpl implements AdminService {
 	SpringTemplateEngine tempEngine;
 	@Autowired
 	private JavaMailSender sender;
+	@Autowired
+	private CropVarietyRepository cropVRepo;
+	@Autowired
+	private CropRepository cropRepo;
+	@Autowired
+	private CropVarietyConverter cropVarietyConverter;
 
 	@Override
 	public String validateLogin(Map<String, String> map) {
@@ -154,14 +166,22 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public Admin getAdminByState(String state) throws ServiceException {
-		Admin admin=null;
+		Admin admin = null;
 		try {
-			admin=adminRepo.findAdminByState(state);
+			admin = adminRepo.findAdminByState(state);
 		} catch (IllegalArgumentException e) {
 			throw new ServiceException("No data found for that id", e);
 		}
 
 		return admin;
+	}
+
+	@Override
+	public CropVarietyDto getCropVarietyDto(Map<String, String> map) throws ServiceException {
+		Crop crop = cropRepo.findMSP(map.get("cropName"), map.get("adminId"));
+		CropVariety cVariety = cropVRepo.findCropQualityPrice(crop.getCropId(), map.get("cropClass"));
+		CropVarietyDto cVarietyDto= cropVarietyConverter.entityToDto(cVariety);
+		return cVarietyDto;
 	}
 
 }

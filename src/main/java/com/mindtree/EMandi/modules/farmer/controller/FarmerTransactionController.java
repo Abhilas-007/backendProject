@@ -17,19 +17,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mindtree.EMandi.exception.FarmerException;
 import com.mindtree.EMandi.exception.service.FarmerTransactionServiceException;
+import com.mindtree.EMandi.exception.service.FarmersServiceException;
 import com.mindtree.EMandi.modules.farmer.converter.FarmerConverter;
 import com.mindtree.EMandi.modules.farmer.dto.ExtraCreditDto;
 import com.mindtree.EMandi.modules.farmer.dto.FarmerTransactionDto;
 import com.mindtree.EMandi.modules.farmer.dto.FarmerTransactionDto1;
 import com.mindtree.EMandi.modules.farmer.dto.TransactionDto;
-import com.mindtree.EMandi.modules.farmer.entity.Farmer;
 import com.mindtree.EMandi.modules.farmer.entity.FarmerTransaction;
 import com.mindtree.EMandi.modules.farmer.repository.FarmerTransactionRepository;
 import com.mindtree.EMandi.modules.farmer.service.FarmerService;
-
-
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -42,69 +39,73 @@ public class FarmerTransactionController {
 	private FarmerTransactionRepository rep;
 	@Autowired
 	private FarmerService farmerService;
+
 	@GetMapping("/getAllCrops/{mandiPincode}")
-	public ResponseEntity<List<FarmerTransactionDto>> getAllCrops(@PathVariable (value="mandiPincode") int mandiPincode) {
-		List<FarmerTransaction> farmer=rep.findByMandiPincode(mandiPincode);
+	public ResponseEntity<List<FarmerTransactionDto>> getAllCrops(
+			@PathVariable(value = "mandiPincode") int mandiPincode) {
+		List<FarmerTransaction> farmer = rep.findByMandiPincode(mandiPincode);
 		List<FarmerTransactionDto> farmerDtos = converter.entityToDtoForListTrans(farmer);
 		HttpHeaders header = new HttpHeaders();
 		header.add("Description", "Getting all crops");
 		return ResponseEntity.status(HttpStatus.OK).headers(header).body(farmerDtos);
 	}
+
 	@GetMapping("/{id}")
 	public ResponseEntity<List<TransactionDto>> getTransactions(@PathVariable int id) {
-		List<FarmerTransaction> transactions=rep.findByFarmerId(id);
+		List<FarmerTransaction> transactions = new ArrayList<>();
+		HttpHeaders header = new HttpHeaders();
+		header.add("desc", "get farmer transactions");
+		header.add("userType", "farmer");
+		try {
+			transactions = farmerService.getTransactions(id);
+		} catch (FarmersServiceException e) {
+
+			return new ResponseEntity<>(null, header, HttpStatus.BAD_REQUEST);
+		}
 		List<TransactionDto> transactionDtos = new ArrayList<>();
-		for(FarmerTransaction f:transactions) {
+		for (FarmerTransaction f : transactions) {
 			transactionDtos.add(converter.transactionToDtoTrans(f));
 		}
-		HttpHeaders header = new HttpHeaders();
-		header.add("Description", "Getting all transaction details");
-		return ResponseEntity.status(HttpStatus.OK).headers(header).body(transactionDtos);
+		return new ResponseEntity<>(transactionDtos, header, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/byId")
-	public ResponseEntity<List<FarmerTransactionDto1>> getTransactions(@RequestParam("clerkId") String clerkId, @RequestParam("farmerId") int farmerId){
+	public ResponseEntity<List<FarmerTransactionDto1>> getTransactions(@RequestParam("clerkId") String clerkId,
+			@RequestParam("farmerId") int farmerId) {
 		List<FarmerTransaction> transactions = farmerService.getTransactions(clerkId, farmerId);
-		return new ResponseEntity<List<FarmerTransactionDto1>>(converter.entityToDto(transactions),HttpStatus.OK);
+		return new ResponseEntity<List<FarmerTransactionDto1>>(converter.entityToDto(transactions), HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/checkForTransactonId")
-	public ResponseEntity<Boolean> checkForTransactionId(@RequestBody int transactionId)
-	{
+	public ResponseEntity<Boolean> checkForTransactionId(@RequestBody int transactionId) {
 		boolean op = false;
-		try
-		{
+		try {
 			op = farmerService.checkForTransactionId(transactionId);
 			HttpHeaders header = new HttpHeaders();
 			header.add("Description", "Checking transaction ID validation");
 			return ResponseEntity.status(HttpStatus.OK).headers(header).body(op);
-		}
-		catch(FarmerTransactionServiceException e)
-		{
+		} catch (FarmerTransactionServiceException e) {
 			op = false;
 			HttpHeaders header = new HttpHeaders();
 			header.add("Description", "Checking transaction ID validation");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(header).body(op);
 		}
 	}
-	
+
 	@PutMapping("/creditExtraAmount")
-	public ResponseEntity<Boolean> creditExtraAmount(@RequestBody ExtraCreditDto extraCreditDto)
-	{
+	public ResponseEntity<Boolean> creditExtraAmount(@RequestBody ExtraCreditDto extraCreditDto) {
 		boolean op = false;
-		try
-		{
+		try {
 			op = farmerService.creditExtraAmount(extraCreditDto);
 			HttpHeaders header = new HttpHeaders();
 			header.add("Description", "Updating transaction details");
 			return ResponseEntity.status(HttpStatus.OK).headers(header).body(op);
-		}
-		catch(FarmerTransactionServiceException e)
-		{
+		} catch (FarmerTransactionServiceException e) {
 			op = false;
 			HttpHeaders header = new HttpHeaders();
 			header.add("Description", "Updating transaction details");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(header).body(op);
 		}
 	}
+
 }

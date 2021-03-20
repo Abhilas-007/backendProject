@@ -1,5 +1,6 @@
 package com.mindtree.EMandi.modules.farmer.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -21,13 +22,15 @@ import com.mindtree.EMandi.modules.farmer.repository.FarmerTransactionRepository
 import com.mindtree.EMandi.modules.farmer.service.FarmerService;
 import com.mindtree.EMandi.modules.mandi.repository.MandiRepository;
 
+
 @Service
 public class FarmerServiceImpl implements FarmerService {
 
 	@Autowired
 	FarmerRepository farmerRepo;
-	
+
 	@Autowired
+
 	private MandiRepository mandiRepo;
 	
 	@Autowired
@@ -52,16 +55,16 @@ public class FarmerServiceImpl implements FarmerService {
 
 	@Override
 	public Farmer createFarmer(Farmer farmer) throws DataNotAddedException {
-          List<Farmer> farmerList= farmerRepo.findAll();
-		 Predicate<Farmer> farmerPredicatec = f-> f.getAadharNumber().equals(farmer.getAadharNumber());
-			try {
-				for (Farmer farmer2 : farmerList) {
-					System.out.println(farmer2.toString());
-					if(farmerPredicatec.test(farmer2)) {
-						return null;
-					}
+		List<Farmer> farmerList = farmerRepo.findAll();
+		Predicate<Farmer> farmerPredicatec = f -> f.getAadharNumber().equals(farmer.getAadharNumber());
+		try {
+			for (Farmer farmer2 : farmerList) {
+				System.out.println(farmer2.toString());
+				if (farmerPredicatec.test(farmer2)) {
+					return null;
 				}
-				return farmerRepo.save(farmer);
+			}
+			return farmerRepo.save(farmer);
 
 		} catch (Exception e) {
 			throw new DataNotAddedException("Data is not added");
@@ -97,9 +100,9 @@ public class FarmerServiceImpl implements FarmerService {
 
 	@Override
 	public String validateQA(Map<String, String> map) throws FarmerException {
-		Farmer farmer=farmerRepo.findById(Integer.parseInt(map.get("userId"))).get();
-		if(farmer.getSecurityQuestion().equalsIgnoreCase(map.get("sQ"))) {
-			if(farmer.getAnswer().equalsIgnoreCase(map.get("answer"))) {
+		Farmer farmer = farmerRepo.findById(Integer.parseInt(map.get("userId"))).get();
+		if (farmer.getSecurityQuestion().equalsIgnoreCase(map.get("sQ"))) {
+			if (farmer.getAnswer().equalsIgnoreCase(map.get("answer"))) {
 				return "yes";
 			}
 		}
@@ -109,46 +112,45 @@ public class FarmerServiceImpl implements FarmerService {
 	@Override
 	public String updateFarmerProfile(Farmer farmerDetails, Farmer farmer) throws FarmersServiceException {
 		System.out.println(farmer.getFarmerName());
-		int count =0;
-		if(!farmerDetails.getAccountNumber().equals(farmer.getAccountNumber())) {
+		int count = 0;
+		if (!farmerDetails.getAccountNumber().equals(farmer.getAccountNumber())) {
 			farmerDetails.setAccountNumber(farmer.getAccountNumber());
-		}
-		else {
+		} else {
 			count++;
 		}
-		if(!farmerDetails.getAnswer().equals(farmer.getAnswer())) {
+		if (!farmerDetails.getAnswer().equals(farmer.getAnswer())) {
 			farmerDetails.setAnswer(farmer.getAnswer());
-		}else {
+		} else {
 			count++;
 		}
-		if(!farmerDetails.getBankName().equals(farmer.getBankName())) {
+		if (!farmerDetails.getBankName().equals(farmer.getBankName())) {
 			farmerDetails.setBankName(farmer.getBankName());
-		}else {
+		} else {
 			count++;
 		}
-		if(!farmerDetails.getIfsc().equals(farmer.getIfsc())) {
+		if (!farmerDetails.getIfsc().equals(farmer.getIfsc())) {
 			farmerDetails.setIfsc(farmer.getIfsc());
-		}else {
+		} else {
 			count++;
 		}
-		if(!farmerDetails.getFarmerName().equals(farmer.getFarmerName())) {
+		if (!farmerDetails.getFarmerName().equals(farmer.getFarmerName())) {
 			farmerDetails.setFarmerName(farmer.getFarmerName());
-		}else {
+		} else {
 			count++;
 		}
-		if(!farmerDetails.getMobileNumber().equals(farmer.getMobileNumber())) {
+		if (!farmerDetails.getMobileNumber().equals(farmer.getMobileNumber())) {
 			farmerDetails.setMobileNumber(farmer.getMobileNumber());
-		}else {
+		} else {
 			count++;
 		}
-		if(!farmerDetails.getPassword().equals(farmer.getPassword())) {
+		if (!farmerDetails.getPassword().equals(farmer.getPassword())) {
 			farmerDetails.setPassword(farmer.getPassword());
-		}else {
+		} else {
 			count++;
 		}
-		if(count==7){
+		if (count == 7) {
 			return null;
-		}else {
+		} else {
 			farmerRepo.save(farmerDetails);
 		}
 		return "Updated SuccessFully";
@@ -160,6 +162,7 @@ public class FarmerServiceImpl implements FarmerService {
 		int mandiPincode = mandiRepo.getMandiPincode(clerkId);
 		return transactionRepo.getTransactions(farmerId, mandiPincode);
 	}
+
 	
 	@Override
 	public boolean checkForTransactionId(int transactionId) throws FarmerTransactionServiceException 
@@ -237,4 +240,17 @@ public class FarmerServiceImpl implements FarmerService {
 			return false;
 		}
 	}
+
+
+	@Override
+	public List<FarmerTransaction> getTransactions(int id) throws FarmersServiceException {
+		List<FarmerTransaction> transactions = new ArrayList<>();
+		try {
+			transactions = transactionRepo.findByFarmerId(id);
+		} catch (Exception e) {
+			throw new FarmersServiceException(e.getMessage());
+		}
+		return transactions;
+	}
+
 }
