@@ -180,8 +180,21 @@ public class AdminServiceImpl implements AdminService {
 	public CropVarietyDto getCropVarietyDto(Map<String, String> map) throws ServiceException {
 		Crop crop = cropRepo.findMSP(map.get("cropName"), map.get("adminId"));
 		CropVariety cVariety = cropVRepo.findCropQualityPrice(crop.getCropId(), map.get("cropClass"));
-		CropVarietyDto cVarietyDto= cropVarietyConverter.entityToDto(cVariety);
+		CropVarietyDto cVarietyDto = cropVarietyConverter.entityToDto(cVariety);
 		return cVarietyDto;
+	}
+
+	@Override
+	public String updateQualityPrice(CropVarietyDto cropVarietyDto) throws ServiceException {
+		CropVariety cVariety = cropVRepo.findCropQualityPrice(cropVarietyDto.getCropId(),
+				cropVarietyDto.getCropClass());
+		cVariety.setCropQualityPrice(cropVarietyDto.getCropQualityPrice());
+		try {
+			cropVRepo.save(cVariety);
+		} catch (IllegalArgumentException e) {
+			throw new ServiceException("Null Entity found");
+		}
+		return "updated";
 	}
 
 }

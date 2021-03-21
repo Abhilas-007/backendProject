@@ -259,7 +259,7 @@ public class AdminController {
 	@PostMapping("/getQP")
 	public ResponseEntity<CropVarietyDto> getQualityPrice(@RequestBody Map<String, String> map) {
 		HttpHeaders header = new HttpHeaders();
-		header.add("desc", "Admin Found");
+		header.add("desc", "get Crop variety price for farmers");
 		header.add("userType", "admin");
 		CropVarietyDto cVDto;
 		try {
@@ -268,6 +268,22 @@ public class AdminController {
 			return new ResponseEntity<>(null, header, HttpStatus.BAD_REQUEST);
 		}
 
-		return new ResponseEntity<>(cVDto, header, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(cVDto, header, HttpStatus.OK);
 	}
+	
+	@PostMapping("/updateQP")
+	public ResponseEntity<String> updateQualityPrice(@RequestBody CropVarietyDto cVDto){
+		HttpHeaders header = new HttpHeaders();
+		header.add("desc", "update crop quality price for farmers");
+		header.add("userType", "admin");
+		String msg;
+		System.out.println("@"+cVDto.getCropQualityPrice());
+		try {
+			msg=adminService.updateQualityPrice(cVDto);
+		}catch(ServiceException e) {
+			return new ResponseEntity<>(null, header, HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(msg, header, HttpStatus.OK);
+	}
+	
 }

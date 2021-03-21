@@ -29,4 +29,6 @@ public interface AdminService {
 	public Admin getAdminByState(String state) throws ServiceException;
 	
 	public CropVarietyDto getCropVarietyDto(Map<String, String> map) throws ServiceException;
+
+	public String updateQualityPrice(CropVarietyDto cropVarietyDto) throws ServiceException;
 }
