@@ -3,6 +3,7 @@ package com.mindtree.EMandi.modules.admin.converter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import com.mindtree.EMandi.modules.admin.dto.AdminDto;
@@ -22,5 +23,10 @@ public class AdminConverter {
 
 	public List<AdminDto> entityToDto(List<Admin> admins) {
 		return admins.stream().map(x -> entityToDto(x)).collect(Collectors.toList());
+	}
+	
+	public Admin dtoToEntity(AdminDto adminDto) {
+		ModelMapper mapper = new ModelMapper();
+		return mapper.map(adminDto, Admin.class);
 	}
 }

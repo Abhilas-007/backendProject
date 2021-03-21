@@ -197,4 +197,15 @@ public class AdminServiceImpl implements AdminService {
 		return "updated";
 	}
 
+	@Override
+	public Admin updateAdmin(Admin admin) {
+		// TODO Auto-generated method stub
+		if(adminRepo.existsById(admin.getAdminId())) {
+			admin.setState(adminRepo.findById(admin.getAdminId()).get().getState());
+			admin.setsAdmin(adminRepo.findById(admin.getAdminId()).get().getsAdmin());
+			adminRepo.save(admin);
+		}
+		return admin;
+	}
+
 }

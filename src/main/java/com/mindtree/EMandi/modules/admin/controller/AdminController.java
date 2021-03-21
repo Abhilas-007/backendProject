@@ -319,4 +319,10 @@ public class AdminController {
 		return new ResponseEntity<>(msg, header, HttpStatus.OK);
 	}
 	
+	@PutMapping("/updateAdmin")
+	public ResponseEntity<AdminDto> updateAdmin(@RequestBody AdminDto adminDto){
+		Admin admin = adminService.updateAdmin(adminConverter.dtoToEntity(adminDto));
+		return new ResponseEntity<AdminDto>(adminDto,HttpStatus.OK);
+	}
+	
 }

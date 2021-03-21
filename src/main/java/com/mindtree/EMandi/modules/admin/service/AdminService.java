@@ -31,4 +31,6 @@ public interface AdminService {
 	public CropVarietyDto getCropVarietyDto(Map<String, String> map) throws ServiceException;
 
 	public String updateQualityPrice(CropVarietyDto cropVarietyDto) throws ServiceException;
+	
+	public Admin updateAdmin(Admin admin);
 }
