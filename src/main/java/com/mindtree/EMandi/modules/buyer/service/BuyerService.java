@@ -24,4 +24,5 @@ public interface BuyerService {
 
 	public List<BuyerTransaction> getTransactions(int id) throws BuyerServiceException;
 	
+	public List<BuyerTransaction> getBuyerTransaction(String clerkId,int buyerId);
 }

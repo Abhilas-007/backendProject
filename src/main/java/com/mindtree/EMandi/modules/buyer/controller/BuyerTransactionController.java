@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mindtree.EMandi.exception.BuyerException;
+import com.mindtree.EMandi.modules.buyer.converter.BuyerConverter;
 import com.mindtree.EMandi.modules.buyer.converter.BuyerTransactionConverter;
 import com.mindtree.EMandi.modules.buyer.dto.BuyerTransactionDto;
 import com.mindtree.EMandi.modules.buyer.entity.BuyerTransaction;
@@ -45,5 +47,11 @@ public class BuyerTransactionController {
 		HttpHeaders header = new HttpHeaders();
 		header.add("Description", "Getting all previous transaction details");
 		return ResponseEntity.status(HttpStatus.OK).headers(header).body(transactionDtos);
+	}
+	
+	@GetMapping("/byId")
+	public ResponseEntity<List<BuyerTransactionDto>> getTransactions(@RequestParam("clerkId") String clerkId, @RequestParam("buyerId") int buyerId){
+		List<BuyerTransaction> transactions = buyerService.getBuyerTransaction(clerkId, buyerId);
+		return new ResponseEntity<List<BuyerTransactionDto>>(buyerConvertor.transactionToDto(transactions),HttpStatus.OK);
 	}
 }

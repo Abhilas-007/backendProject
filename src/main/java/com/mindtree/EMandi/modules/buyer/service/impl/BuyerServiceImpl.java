@@ -16,6 +16,7 @@ import com.mindtree.EMandi.modules.buyer.repository.BuyerRepository;
 import com.mindtree.EMandi.modules.buyer.repository.BuyerTransactionRepository;
 import com.mindtree.EMandi.modules.buyer.service.BuyerService;
 import com.mindtree.EMandi.modules.farmer.entity.Farmer;
+import com.mindtree.EMandi.modules.mandi.repository.MandiRepository;
 
 @Service
 public class BuyerServiceImpl implements BuyerService{
@@ -25,6 +26,9 @@ public class BuyerServiceImpl implements BuyerService{
 
 	@Autowired
 	private BuyerTransactionRepository buyerTransactionRepo;
+	
+	@Autowired
+	private MandiRepository mandiRepo;
 	
 	@Override
 	public void updateBuyer(Buyer buyer) {
@@ -93,6 +97,13 @@ public class BuyerServiceImpl implements BuyerService{
 			throw new DataNotFoundException("Data not founded.");
 		}
 		
+	}
+
+	@Override
+	public List<BuyerTransaction> getBuyerTransaction(String clerkId, int buyerId) {
+		// TODO Auto-generated method stub
+		int mandiPincode = mandiRepo.getMandiPincode(clerkId);
+		return buyerTransactionRepo.getTransactions(mandiPincode, buyerId);
 	}
 
 }
