@@ -95,12 +95,12 @@ public class AdminController {
 			admins = adminService.getAllAdmins();
 		} catch (ServiceException e) {
 			HttpHeaders header = new HttpHeaders();
-			header.add("Description", "Getting all admins");
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(header).body(null);
+			header.add("Description", "Getting all admins failed");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(header).body(null);
 		}
 		List<AdminDto> adminsDtos = adminConverter.entityToDto(admins);
 		HttpHeaders header = new HttpHeaders();
-		header.add("Description", "Getting all admins");
+		header.add("Description", "Getting all admins success");
 		return ResponseEntity.status(HttpStatus.OK).headers(header).body(adminsDtos);
 	}
 
@@ -191,10 +191,10 @@ public class AdminController {
 			farmersDtos = farmerConverter
 					.entityToDtoForList(adminService.getFarmersByAdminIdAndMandiPincode(adminId, mandiPincode));
 		} catch (ServiceException e) {
-			header.add("Description", "Error in getting all farmers");
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(header).body(null);
+			header.add("Description", "Getting all farmers failed");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(header).body(null);
 		}
-		header.add("Description", "Getting all farmers");
+		header.add("Description", "Getting all farmers success");
 		return ResponseEntity.status(HttpStatus.OK).headers(header).body(farmersDtos);
 	}
 
@@ -209,10 +209,10 @@ public class AdminController {
 			buyersDtos = buyerConverter
 					.entityToDtoForList(adminService.getBuyersByAdminIdAndMandiPincode(adminId, mandiPincode));
 		} catch (ServiceException e) {
-			header.add("Description", "Error in getting all buyers");
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(header).body(null);
+			header.add("Description", "Getting all buyers failed");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(header).body(null);
 		}
-		header.add("Description", "Getting all buyers");
+		header.add("Description", "Getting all buyers success");
 		return ResponseEntity.status(HttpStatus.OK).headers(header).body(buyersDtos);
 	}
 
