@@ -75,11 +75,9 @@
 	</dependencies>
 
 	<build>
-<<<<<<< HEAD
+
 	    <finalName>ROOT</finalName>
-=======
-		<finalName>ROOT</finalName>
->>>>>>> 7ef53ac2843a6db1398d4fba9a1fb0c1b8bf2688
+
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
