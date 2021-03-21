@@ -62,18 +62,22 @@ public class BuyerController {
 	}
 
 	@PostMapping("/add-buyer")
-	public ResponseEntity<Integer> createBuyer(@RequestBody BuyerSignupCode buyer) {
+	public ResponseEntity<Integer> createBuyer(@RequestBody BuyerSignupCode buyer) throws Exception {
 
 		Buyer buyer1 = signupconverter.dtoToEntity(buyer);
+		try {
 		Buyer buyer2 = buyerService.saveBuyer(buyer1);
-		
+		if(buyer2==null) {
+			return null;
+		}
 		HttpHeaders header = new HttpHeaders();
-		header.add("desc", "Signup Request being check");
-		header.add("userType", "buyer");
+		header.add("desc", "buyer application");
 		return new ResponseEntity<Integer>(buyer2.getBuyerId(), header, HttpStatus.OK);
-
-		
+	} catch (Exception e) {
+		System.out.println("Data not added to database");
+	}	throw new Exception("Buyer not added");
 	}
+	
 
 	@PostMapping("/login")
 	public ResponseEntity<String> sayHello(@RequestBody Map<String, String> map) {

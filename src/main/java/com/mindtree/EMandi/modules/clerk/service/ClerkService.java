@@ -28,4 +28,8 @@ public interface ClerkService {
 	public String passwordMail(Map<String, String> map) throws ServiceException;
 	
 	public List<Integer> getFarmerIds(String clerkId);
+	
+	public List<Clerk> getAllClerks(List<String> mandi) throws ServiceException;
+	
+	Clerk updateClerk(Clerk cler) throws ServiceException;
 }

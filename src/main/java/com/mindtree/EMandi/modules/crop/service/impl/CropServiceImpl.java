@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.mindtree.EMandi.exception.DataNotAddedException;
 import com.mindtree.EMandi.exception.DatabaseConnectionFailureException;
+import com.mindtree.EMandi.exception.ResourceNotFoundException;
 import com.mindtree.EMandi.exception.ServiceException;
 import com.mindtree.EMandi.modules.crop.entity.Crop;
 import com.mindtree.EMandi.modules.crop.entity.CropVariety;
@@ -87,10 +88,21 @@ public class CropServiceImpl implements CropService {
 	}
 
 	@Override
-	public List<Crop> findCropByAdminId(String adminId) {
+	public List<Crop> findCropByAdminId(String adminId) throws ServiceException {
 		// TODO Auto-generated method stub
-		List<Crop> crop = cropRepo.findByAdminId(adminId);
+		List<Crop> crop = null;
+		try {
+		crop=cropRepo.findByAdminId(adminId);
+		if (crop.isEmpty()) {
+			throw new ResourceNotFoundException();
+		}
+		
+	} catch (ResourceNotFoundException e) {
+		System.out.println("No data available");
+	} catch (Exception e) {
+		throw new ServiceException("Some exception occured while grabbing data from DB.", e);
+	}
+	
 		return crop;
 	}
-
 }

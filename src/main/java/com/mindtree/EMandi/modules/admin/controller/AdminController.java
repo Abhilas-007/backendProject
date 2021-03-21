@@ -140,7 +140,13 @@ public class AdminController {
 	@GetMapping("/getAllCrops/{adminId}")
 	public ResponseEntity<List<CropDto>> getCropByAdminId(@PathVariable (value="adminId") String adminId){
 	
-		List<Crop>	crops=cropService.findCropByAdminId(adminId);
+		List<Crop> crops = null;
+		try {
+			crops = cropService.findCropByAdminId(adminId);
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		HttpHeaders header = new HttpHeaders();
 		header.add("Description", "Getting all crops");
 		List<CropDto> crop=cropConverter.entityToDto(crops);
@@ -148,11 +154,20 @@ public class AdminController {
 	}
 	 
 	@GetMapping("/getAllClerks/{adminId}")
-	public List<Clerk> getAll(@PathVariable (value="adminId") String adminId){
+	public ResponseEntity<List<Clerk>> getAll(@PathVariable (value="adminId") String adminId){
 		
 		List<String> mandi=mandiRepository.findByAdminId(adminId);
-	List<Clerk> clerk=clerkRepository.findAllById(mandi);
-		return clerk;
+		HttpHeaders header = new HttpHeaders();
+		header.add("Description", "Getting all crops");
+	List<Clerk> clerk = null;
+	try {
+		clerk = clerkservice.getAllClerks(mandi);
+	} catch (ServiceException e) {
+		// TODO Auto-generated catch block
+		header.add("Description", "Error in getting all clerks");
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(header).body(null);
+	}
+	return ResponseEntity.status(HttpStatus.OK).headers(header).body(clerk);
 	}
 	
 	@PostMapping("/getAllFarmersByAdminIdAndMandiPincode")
@@ -232,7 +247,12 @@ public class AdminController {
 
 		Clerk clerk1 = clerkConverter.dtoToEntity(clerk);
 		
-		clerkRepository.save(clerk1);
+		try {
+			clerkservice.updateClerk(clerk1);
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Update failed");
+		}
 
 		return new ResponseEntity<ClerkDto>(clerkConverter.entityToDto(clerk1), HttpStatus.OK);
 

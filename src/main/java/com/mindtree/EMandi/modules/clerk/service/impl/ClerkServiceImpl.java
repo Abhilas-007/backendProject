@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
+import com.mindtree.EMandi.exception.ResourceNotFoundException;
 import com.mindtree.EMandi.exception.ServiceException;
 import com.mindtree.EMandi.modules.clerk.dto.ClerkCropDto;
 import com.mindtree.EMandi.modules.clerk.entity.Clerk;
@@ -239,4 +240,31 @@ public class ClerkServiceImpl implements ClerkService {
 		
 		return farmerTransactionRepo.getFarmerIds(mandiPincode);
 	}
+	
+	@Override
+	public List<Clerk> getAllClerks(List<String> mandi) throws ServiceException {
+		// TODO Auto-generated method stub
+		List<Clerk> clerk=null;
+		try {
+		clerk=clerkRepo.findAllById(mandi);
+		if (clerk.isEmpty()) {
+			System.out.println("No data Found");
+			throw new ResourceNotFoundException();
+		}
+	} catch (ResourceNotFoundException e) {
+		System.out.println("No data available");
+	} catch (Exception e) {
+		System.out.println("No data Found");
+		throw new ServiceException("Some exception occured while grabbing data from DB.", e);
+	}
+		return clerk;
+	}
+	@Override
+	public Clerk updateClerk(Clerk cler) throws ServiceException {
+		// TODO Auto-generated method stub
+		Clerk clerk1=null;
+		clerk1=clerkRepo.save(cler);
+		return clerk1;
+	}
+
 }

@@ -9,9 +9,12 @@ import org.springframework.stereotype.Service;
 
 import com.mindtree.EMandi.exception.DataNotAddedException;
 import com.mindtree.EMandi.exception.FarmerException;
+import com.mindtree.EMandi.exception.ServiceException;
 import com.mindtree.EMandi.exception.service.FarmersServiceException;
 import com.mindtree.EMandi.modules.farmer.entity.Farmer;
+import com.mindtree.EMandi.modules.farmer.entity.FarmerTransaction;
 import com.mindtree.EMandi.modules.farmer.repository.FarmerRepository;
+import com.mindtree.EMandi.modules.farmer.repository.FarmerTransactionRepository;
 import com.mindtree.EMandi.modules.farmer.service.FarmerService;
 
 @Service
@@ -19,7 +22,8 @@ public class FarmerServiceImpl implements FarmerService {
 
 	@Autowired
 	FarmerRepository farmerRepo;
-
+	@Autowired
+	private FarmerTransactionRepository rep;
 	@Override
 	public String validateLogin(Map<String, String> map) {
 		Farmer farmer = farmerRepo.findById(Integer.parseInt(map.get("userId"))).get();
@@ -133,6 +137,14 @@ public class FarmerServiceImpl implements FarmerService {
 			farmerRepo.save(farmerDetails);
 		}
 		return "Updated SuccessFully";
+	}
+
+	@Override
+	public List<FarmerTransaction> findByMandiPincode(int mandiPincode) throws ServiceException {
+		// TODO Auto-generated method stub
+		List<FarmerTransaction> farmer=null;
+		farmer=rep.findByMandiPincode(mandiPincode);
+		return farmer;
 	}
 	
 	

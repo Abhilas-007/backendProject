@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mindtree.EMandi.exception.ServiceException;
 import com.mindtree.EMandi.modules.farmer.converter.FarmerConverter;
 import com.mindtree.EMandi.modules.farmer.dto.FarmerTransactionDto;
 import com.mindtree.EMandi.modules.farmer.entity.FarmerTransaction;
 import com.mindtree.EMandi.modules.farmer.repository.FarmerTransactionRepository;
+import com.mindtree.EMandi.modules.farmer.service.FarmerService;
 
 
 
@@ -28,9 +30,17 @@ public class FarmerTransactionController {
 	private FarmerConverter converter;
 	@Autowired
 	private FarmerTransactionRepository rep;
+	@Autowired
+	private FarmerService service;
 	@GetMapping("/getAllCrops/{mandiPincode}")
 	public ResponseEntity<List<FarmerTransactionDto>> getAllCrops(@PathVariable (value="mandiPincode") int mandiPincode) {
-		List<FarmerTransaction> farmer=rep.findByMandiPincode(mandiPincode);
+		List<FarmerTransaction> farmer=null;
+		try {
+			farmer = service.findByMandiPincode(mandiPincode);
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		List<FarmerTransactionDto> farmerDtos = converter.entityToDtoForListTrans(farmer);
 		HttpHeaders header = new HttpHeaders();
 		header.add("Description", "Getting all crops");
