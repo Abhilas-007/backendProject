@@ -1,6 +1,7 @@
 package com.mindtree.EMandi.modules.mandi.entity;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,6 +14,7 @@ import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mindtree.EMandi.modules.admin.entity.Admin;
+import com.mindtree.EMandi.modules.buyer.entity.BuyerRequest;
 import com.mindtree.EMandi.modules.buyer.entity.BuyerTransaction;
 import com.mindtree.EMandi.modules.clerk.entity.Clerk;
 import com.mindtree.EMandi.modules.farmer.entity.FarmerTransaction;
@@ -33,6 +35,8 @@ public class Mandi {
 	@ManyToOne
 	@JoinColumn(name = "adminId")
 	private Admin admin;
+	@OneToMany(mappedBy = "mandi")@JsonIgnore
+	private List<BuyerRequest> requests;
 	
 	public Mandi() {
 	}

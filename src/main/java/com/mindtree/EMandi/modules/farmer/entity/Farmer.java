@@ -130,6 +130,14 @@ public class Farmer {
 	public void setAnswer(String answer) {
 		this.answer = answer;
 	}
+
+	@Override
+	public String toString() {
+		return "Farmer [farmerId=" + farmerId + ", farmerName=" + farmerName + ", bankName=" + bankName
+				+ ", accountNumber=" + accountNumber + ", ifsc=" + ifsc + ", aadharNumber=" + aadharNumber
+				+ ", password=" + password + ", mobileNumber=" + mobileNumber + ", securityQuestion=" + securityQuestion
+				+ ", answer=" + answer + ", transactions=" + transactions + "]";
+	}
 	
 	
 	

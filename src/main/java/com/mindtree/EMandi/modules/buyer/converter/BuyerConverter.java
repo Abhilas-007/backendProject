@@ -1,5 +1,8 @@
 package com.mindtree.EMandi.modules.buyer.converter;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -23,5 +26,10 @@ public class BuyerConverter {
 		BuyerDto buyerDto = mapper.map(buyer, BuyerDto.class);
 		
 		return buyerDto;
+	}
+	
+	public List<BuyerDto> entityToDtoForList(List<Buyer> buyer) 
+	{
+		return buyer.stream().map(x -> entityToDto(x)).collect(Collectors.toList());
 	}
 }

@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.mindtree.EMandi.modules.mandi.entity.Mandi;
 
@@ -21,7 +23,8 @@ public class FarmerTransaction {
 	private String cropClass;
 	private double quantity;
 	private double amount;
-	private Date date;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date date = new Date();
 	@ManyToOne
 	@JoinColumn(name = "farmerId")
 	private Farmer farmer;

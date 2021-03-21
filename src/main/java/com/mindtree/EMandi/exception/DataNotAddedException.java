@@ -1,6 +1,8 @@
 package com.mindtree.EMandi.exception;
 
-public class DataNotAddedException extends FarmerException {
+import com.mindtree.EMandi.exception.service.FarmersServiceException;
+
+public class DataNotAddedException extends FarmersServiceException {
 
 	public DataNotAddedException() {
 		super();
