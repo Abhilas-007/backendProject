@@ -133,4 +133,9 @@ public class ClerkController {
 	public ResponseEntity<List<Integer>> getFarmerIds(@RequestParam("clerkId") String clerkId){
 		return new ResponseEntity<List<Integer>>(clerkService.getFarmerIds(clerkId),HttpStatus.OK);
 	}
+	
+	@GetMapping("/buyers")
+	public ResponseEntity<List<Integer>> getBuyerIds(@RequestParam("clerkId") String clerkId){
+		return new ResponseEntity<List<Integer>>(clerkService.getBuyerIds(clerkId),HttpStatus.OK);
+	}
 }

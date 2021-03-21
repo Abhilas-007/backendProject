@@ -60,4 +60,5 @@ public class FarmerTransactionDto1 {
 		this.amount = amount;
 	}
 
+
 }

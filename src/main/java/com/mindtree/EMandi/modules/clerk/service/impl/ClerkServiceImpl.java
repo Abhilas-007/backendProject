@@ -17,6 +17,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import com.mindtree.EMandi.exception.ResourceNotFoundException;
 import com.mindtree.EMandi.exception.ServiceException;
+import com.mindtree.EMandi.modules.buyer.repository.BuyerTransactionRepository;
 import com.mindtree.EMandi.modules.clerk.dto.ClerkCropDto;
 import com.mindtree.EMandi.modules.clerk.entity.Clerk;
 import com.mindtree.EMandi.modules.clerk.repository.ClerkRepository;
@@ -60,6 +61,9 @@ public class ClerkServiceImpl implements ClerkService {
 	SpringTemplateEngine tempEngine;
 	@Autowired
 	private JavaMailSender sender;
+	
+	@Autowired
+	private BuyerTransactionRepository buyerTransactionRepo;
 
 	@Override
 	public String validateLogin(Map<String, String> map) {
@@ -265,6 +269,14 @@ public class ClerkServiceImpl implements ClerkService {
 		Clerk clerk1=null;
 		clerk1=clerkRepo.save(cler);
 		return clerk1;
+	}
+
+	@Override
+	public List<Integer> getBuyerIds(String clerkId) {
+		// TODO Auto-generated method stub
+		int mandiPincode = mandiRepo.getMandiPincode(clerkId);
+		
+		return buyerTransactionRepo.getBuyerIds(mandiPincode);
 	}
 
 }

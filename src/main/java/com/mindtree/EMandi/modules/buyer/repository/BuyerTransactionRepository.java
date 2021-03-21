@@ -12,4 +12,7 @@ import com.mindtree.EMandi.modules.buyer.entity.BuyerTransaction;
 public interface BuyerTransactionRepository extends JpaRepository<BuyerTransaction, Integer> {
 	@Query("select c from BuyerTransaction c where c.buyer.buyerId=?1")
 	List<BuyerTransaction> findByBuyerId(int id);
+	
+	@Query("select distinct b.buyer.buyerId from BuyerTransaction b where b.mandi.mandiPincode=?1")
+	List<Integer> getBuyerIds(int mandiPincode);
 }

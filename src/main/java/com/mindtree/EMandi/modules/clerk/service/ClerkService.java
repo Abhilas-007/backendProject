@@ -32,4 +32,6 @@ public interface ClerkService {
 	public List<Clerk> getAllClerks(List<String> mandi) throws ServiceException;
 	
 	Clerk updateClerk(Clerk cler) throws ServiceException;
+	
+	public List<Integer> getBuyerIds(String clerkId);
 }
