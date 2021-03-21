@@ -34,4 +34,6 @@ public interface ClerkService {
 	Clerk updateClerk(Clerk cler) throws ServiceException;
 	
 	public List<Integer> getBuyerIds(String clerkId);
+	
+	public boolean updateClerkProfile(Clerk clerk) throws ServiceException;
 }

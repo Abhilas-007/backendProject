@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mindtree.EMandi.exception.ServiceException;
 import com.mindtree.EMandi.modules.admin.entity.Admin;
+import com.mindtree.EMandi.modules.clerk.converter.ClerkConverter;
 import com.mindtree.EMandi.modules.clerk.dto.ClerkCropDto;
+import com.mindtree.EMandi.modules.clerk.dto.ClerkDto;
 import com.mindtree.EMandi.modules.clerk.entity.Clerk;
 import com.mindtree.EMandi.modules.clerk.service.ClerkService;
 
@@ -30,6 +32,9 @@ public class ClerkController {
 
 	@Autowired
 	ClerkService clerkService;
+	
+	@Autowired
+	private ClerkConverter clerkConv;
 
 	@PostMapping("/login")
 	public ResponseEntity<String> sayHello(@RequestBody Map<String, String> map) {
@@ -137,5 +142,60 @@ public class ClerkController {
 	@GetMapping("/buyers")
 	public ResponseEntity<List<Integer>> getBuyerIds(@RequestParam("clerkId") String clerkId){
 		return new ResponseEntity<List<Integer>>(clerkService.getBuyerIds(clerkId),HttpStatus.OK);
+	}
+	
+	@PutMapping("/updateClerk")
+	public ResponseEntity<Boolean> updateClerk(@RequestBody ClerkDto clerkDto)
+	{
+		Clerk clerk = clerkConv.dtoToEntity(clerkDto);
+		boolean op = false;
+		try
+		{
+			op = clerkService.updateClerkProfile(clerk);
+		}
+		catch(ServiceException e)
+		{
+			e.printStackTrace();
+			op = false;
+		}
+		if(op == true)
+		{
+			HttpHeaders header = new HttpHeaders();
+			header.add("Description", "Updating clerk details success");
+			return ResponseEntity.status(HttpStatus.OK).headers(header).body(op);
+		}
+		else
+		{
+			HttpHeaders header = new HttpHeaders();
+			header.add("Description", "Updating clerk details failed");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(header).body(op);
+		}
+	}
+	
+	@GetMapping("/getClerk/{id}")
+	public ResponseEntity<Clerk> getClerkById(@PathVariable String id)
+	{
+		Clerk clerk = new Clerk();
+		try
+		{
+			clerk = clerkService.getClerk(id);
+		}
+		catch(ServiceException e)
+		{
+			e.printStackTrace();
+			clerk = null;
+		}
+		if(clerk != null)
+		{
+			HttpHeaders header = new HttpHeaders();
+			header.add("Description", "Getting clerk details success");
+			return ResponseEntity.status(HttpStatus.OK).headers(header).body(clerk);
+		}
+		else
+		{
+			HttpHeaders header = new HttpHeaders();
+			header.add("Description", "Getting clerk details failed");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(header).body(clerk);
+		}
 	}
 }

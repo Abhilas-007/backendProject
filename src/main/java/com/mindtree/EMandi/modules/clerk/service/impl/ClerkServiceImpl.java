@@ -278,5 +278,19 @@ public class ClerkServiceImpl implements ClerkService {
 		
 		return buyerTransactionRepo.getBuyerIds(mandiPincode);
 	}
+	
+	@Override
+	public boolean updateClerkProfile(Clerk clerk) throws ServiceException 
+	{
+		try
+		{
+			clerkRepo.save(clerk);
+			return true;
+		}
+		catch(Exception e)
+		{
+			throw new ServiceException("Something went wrong while updating clerk.",e);
+		}
+	}
 
 }
