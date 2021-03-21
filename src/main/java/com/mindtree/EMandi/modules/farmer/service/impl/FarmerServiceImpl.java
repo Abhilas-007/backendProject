@@ -1,5 +1,6 @@
 package com.mindtree.EMandi.modules.farmer.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -9,21 +10,46 @@ import org.springframework.stereotype.Service;
 
 import com.mindtree.EMandi.exception.DataNotAddedException;
 import com.mindtree.EMandi.exception.FarmerException;
+
 import com.mindtree.EMandi.exception.ServiceException;
+
+import com.mindtree.EMandi.exception.service.FarmerTransactionServiceException;
+
 import com.mindtree.EMandi.exception.service.FarmersServiceException;
+import com.mindtree.EMandi.modules.crop.repository.CropRepository;
+import com.mindtree.EMandi.modules.crop.repository.CropVarietyRepository;
+import com.mindtree.EMandi.modules.farmer.dto.ExtraCreditDto;
 import com.mindtree.EMandi.modules.farmer.entity.Farmer;
 import com.mindtree.EMandi.modules.farmer.entity.FarmerTransaction;
 import com.mindtree.EMandi.modules.farmer.repository.FarmerRepository;
 import com.mindtree.EMandi.modules.farmer.repository.FarmerTransactionRepository;
 import com.mindtree.EMandi.modules.farmer.service.FarmerService;
+import com.mindtree.EMandi.modules.mandi.repository.MandiRepository;
+
 
 @Service
 public class FarmerServiceImpl implements FarmerService {
 
 	@Autowired
 	FarmerRepository farmerRepo;
+
 	@Autowired
 	private FarmerTransactionRepository rep;
+
+
+	@Autowired
+
+	private MandiRepository mandiRepo;
+	
+	@Autowired
+	FarmerTransactionRepository transactionRepo;
+	
+	@Autowired
+	private CropRepository cropRepo;
+	
+	@Autowired
+	private CropVarietyRepository cropVarietyRepo;
+
 	@Override
 	public String validateLogin(Map<String, String> map) {
 		Farmer farmer = farmerRepo.findById(Integer.parseInt(map.get("userId"))).get();
@@ -37,16 +63,16 @@ public class FarmerServiceImpl implements FarmerService {
 
 	@Override
 	public Farmer createFarmer(Farmer farmer) throws DataNotAddedException {
-          List<Farmer> farmerList= farmerRepo.findAll();
-		 Predicate<Farmer> farmerPredicatec = f-> f.getAadharNumber().equals(farmer.getAadharNumber());
-			try {
-				for (Farmer farmer2 : farmerList) {
-					System.out.println(farmer2.toString());
-					if(farmerPredicatec.test(farmer2)) {
-						return null;
-					}
+		List<Farmer> farmerList = farmerRepo.findAll();
+		Predicate<Farmer> farmerPredicatec = f -> f.getAadharNumber().equals(farmer.getAadharNumber());
+		try {
+			for (Farmer farmer2 : farmerList) {
+				System.out.println(farmer2.toString());
+				if (farmerPredicatec.test(farmer2)) {
+					return null;
 				}
-				return farmerRepo.save(farmer);
+			}
+			return farmerRepo.save(farmer);
 
 		} catch (Exception e) {
 			throw new DataNotAddedException("Data is not added");
@@ -82,9 +108,9 @@ public class FarmerServiceImpl implements FarmerService {
 
 	@Override
 	public String validateQA(Map<String, String> map) throws FarmerException {
-		Farmer farmer=farmerRepo.findById(Integer.parseInt(map.get("userId"))).get();
-		if(farmer.getSecurityQuestion().equalsIgnoreCase(map.get("sQ"))) {
-			if(farmer.getAnswer().equalsIgnoreCase(map.get("answer"))) {
+		Farmer farmer = farmerRepo.findById(Integer.parseInt(map.get("userId"))).get();
+		if (farmer.getSecurityQuestion().equalsIgnoreCase(map.get("sQ"))) {
+			if (farmer.getAnswer().equalsIgnoreCase(map.get("answer"))) {
 				return "yes";
 			}
 		}
@@ -94,58 +120,154 @@ public class FarmerServiceImpl implements FarmerService {
 	@Override
 	public String updateFarmerProfile(Farmer farmerDetails, Farmer farmer) throws FarmersServiceException {
 		System.out.println(farmer.getFarmerName());
-		int count =0;
-		if(!farmerDetails.getAccountNumber().equals(farmer.getAccountNumber())) {
+		int count = 0;
+		if (!farmerDetails.getAccountNumber().equals(farmer.getAccountNumber())) {
 			farmerDetails.setAccountNumber(farmer.getAccountNumber());
-		}
-		else {
+		} else {
 			count++;
 		}
-		if(!farmerDetails.getAnswer().equals(farmer.getAnswer())) {
+		if (!farmerDetails.getAnswer().equals(farmer.getAnswer())) {
 			farmerDetails.setAnswer(farmer.getAnswer());
-		}else {
+		} else {
 			count++;
 		}
-		if(!farmerDetails.getBankName().equals(farmer.getBankName())) {
+		if (!farmerDetails.getBankName().equals(farmer.getBankName())) {
 			farmerDetails.setBankName(farmer.getBankName());
-		}else {
+		} else {
 			count++;
 		}
-		if(!farmerDetails.getIfsc().equals(farmer.getIfsc())) {
+		if (!farmerDetails.getIfsc().equals(farmer.getIfsc())) {
 			farmerDetails.setIfsc(farmer.getIfsc());
-		}else {
+		} else {
 			count++;
 		}
-		if(!farmerDetails.getFarmerName().equals(farmer.getFarmerName())) {
+		if (!farmerDetails.getFarmerName().equals(farmer.getFarmerName())) {
 			farmerDetails.setFarmerName(farmer.getFarmerName());
-		}else {
+		} else {
 			count++;
 		}
-		if(!farmerDetails.getMobileNumber().equals(farmer.getMobileNumber())) {
+		if (!farmerDetails.getMobileNumber().equals(farmer.getMobileNumber())) {
 			farmerDetails.setMobileNumber(farmer.getMobileNumber());
-		}else {
+		} else {
 			count++;
 		}
-		if(!farmerDetails.getPassword().equals(farmer.getPassword())) {
+		if (!farmerDetails.getPassword().equals(farmer.getPassword())) {
 			farmerDetails.setPassword(farmer.getPassword());
-		}else {
+		} else {
 			count++;
 		}
-		if(count==7){
+		if (count == 7) {
 			return null;
-		}else {
+		} else {
 			farmerRepo.save(farmerDetails);
 		}
 		return "Updated SuccessFully";
 	}
 
 	@Override
+
 	public List<FarmerTransaction> findByMandiPincode(int mandiPincode) throws ServiceException {
 		// TODO Auto-generated method stub
 		List<FarmerTransaction> farmer=null;
 		farmer=rep.findByMandiPincode(mandiPincode);
 		return farmer;
 	}
+
+	public List<FarmerTransaction> getTransactions(String clerkId, int farmerId) {
+		// TODO Auto-generated method stub
+		int mandiPincode = mandiRepo.getMandiPincode(clerkId);
+		return transactionRepo.getTransactions(farmerId, mandiPincode);
+	}
+
+
 	
-	
+	@Override
+	public boolean checkForTransactionId(int transactionId) throws FarmerTransactionServiceException 
+	{
+		FarmerTransaction farmerTrans = new FarmerTransaction();
+		try
+		{
+			farmerTrans = transactionRepo.findById(transactionId).orElse(null);
+		}
+		catch(Exception e)
+		{
+			throw new FarmerTransactionServiceException("Something went wrong while grabbing data.",e);
+		}
+		if(farmerTrans == null)
+		{
+			return false;
+		}
+		else
+		{
+			String cropClass = farmerTrans.getCropClass();
+			if(cropClass.equals("C"))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
+
+	@Override
+	public boolean creditExtraAmount(ExtraCreditDto extraCreditDto) throws FarmerTransactionServiceException 
+	{
+		int transactionId = extraCreditDto.getTransactionId();
+		String cropClass = extraCreditDto.getCropClass();
+		FarmerTransaction farmerTransaction = new FarmerTransaction();
+		try
+		{
+			farmerTransaction = transactionRepo.findById(transactionId).orElse(null);
+		}
+		catch(Exception e)
+		{
+			throw new FarmerTransactionServiceException("Something went wrong while grabbing data.",e);
+		}
+		if(farmerTransaction != null)
+		{
+			try
+			{
+				int mandiPincode = farmerTransaction.getMandi().getMandiPincode();
+				double cropQty = farmerTransaction.getQuantity();
+				double presentAmount = farmerTransaction.getAmount();
+				String adminId = mandiRepo.getAdminIdByMandiPincode(mandiPincode);
+				String cropName = farmerTransaction.getCropName();
+				int cropId = cropRepo.getCropIdByAdminIdAndCropName(adminId, cropName);
+				double cropQualityPrice = cropVarietyRepo.findCropQualityPrice(cropId, cropClass).getCropQualityPrice();
+				
+				double extraAmount = cropQty * cropQualityPrice;
+				double newAmount = presentAmount + extraAmount;
+				
+				farmerTransaction.setAmount(newAmount);
+				farmerTransaction.setCropClass(cropClass);
+			
+				transactionRepo.save(farmerTransaction);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				throw new FarmerTransactionServiceException("Something went wrong while updating data.",e);
+			}
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+
+	@Override
+	public List<FarmerTransaction> getTransactions(int id) throws FarmersServiceException {
+		List<FarmerTransaction> transactions = new ArrayList<>();
+		try {
+			transactions = transactionRepo.findByFarmerId(id);
+		} catch (Exception e) {
+			throw new FarmersServiceException(e.getMessage());
+		}
+		return transactions;
+	}
+
 }

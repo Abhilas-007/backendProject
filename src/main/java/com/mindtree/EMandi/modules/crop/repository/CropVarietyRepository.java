@@ -9,4 +9,8 @@ public interface CropVarietyRepository extends JpaRepository<CropVariety, Intege
 	@Query("select c  from CropVariety c where c.crop.cropId=?1 and c.cropClass=?2")
 	CropVariety getBuyerCropPrice(int cropId, String cropClass);
 	
+	@Query("select c from CropVariety c where c.crop.cropId=?1 and c.cropClass=?2")
+	CropVariety findCropQualityPrice(int cropId, String cropClass);
+	
+	
 }
