@@ -23,4 +23,5 @@ public interface BuyerService {
 	public String validateQA(Map<String, String> map);
 
 	public List<BuyerTransaction> getTransactions(int id) throws BuyerServiceException;
+	
 }

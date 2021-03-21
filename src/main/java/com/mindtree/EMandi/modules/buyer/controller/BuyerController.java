@@ -150,4 +150,10 @@ public class BuyerController {
 
 		
 	}
+	
+	@GetMapping("/details")
+	public ResponseEntity<BuyerDto> getBuyerDetails(@RequestParam("buyerId") int buyerId){
+		Buyer buyer = buyerService.getBuyer(buyerId);
+		return new ResponseEntity<BuyerDto>(buyerConverter.entityToDto(buyer),HttpStatus.OK);
+	}
 }
