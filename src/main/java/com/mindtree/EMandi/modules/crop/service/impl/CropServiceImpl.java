@@ -1,5 +1,6 @@
 package com.mindtree.EMandi.modules.crop.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,26 @@ public class CropServiceImpl implements CropService {
 	}
 
 	@Override
-	public List<Crop> getAllCrops() {
-		return cropRepo.findAll();
+	public List<Crop> getAllCrops() throws ServiceException
+	{
+		List<Crop> crops = new ArrayList<Crop>();
+		try
+		{
+			crops = cropRepo.findAll();
+			if(crops.size() <= 0)
+			{
+				throw new ResourceNotFoundException();
+			}
+			return crops;
+		}
+		catch(ResourceNotFoundException e)
+		{
+			throw new ServiceException("No crops found.",e);
+		}
+		catch(Exception e)
+		{
+			throw new ServiceException("Something went wrong while getting all crops",e);
+		}
 	}
 
 	@Override

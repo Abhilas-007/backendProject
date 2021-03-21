@@ -1,5 +1,6 @@
 package com.mindtree.EMandi.modules.crop.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mindtree.EMandi.exception.ServiceException;
 import com.mindtree.EMandi.modules.crop.converter.CropConverter;
 import com.mindtree.EMandi.modules.crop.converter.CropVarietyConverter;
 import com.mindtree.EMandi.modules.crop.dto.CropDto;
@@ -48,11 +50,22 @@ public class CropController {
 
 	@GetMapping("/getAllCrops")
 	public ResponseEntity<List<CropDto>> getAllCrops() {
-		List<Crop> crops = cropService.getAllCrops();
-		List<CropDto> cropsDtos = cropConverter.entityToDtoForList(crops);
-		HttpHeaders header = new HttpHeaders();
-		header.add("Description", "Getting all crops");
-		return ResponseEntity.status(HttpStatus.OK).headers(header).body(cropsDtos);
+		List<Crop> crops = new ArrayList<Crop>();
+		List<CropDto> cropsDtos = new ArrayList<CropDto>();
+		try
+		{
+			crops = cropService.getAllCrops();
+			cropsDtos = cropConverter.entityToDtoForList(crops);
+			HttpHeaders header = new HttpHeaders();
+			header.add("Description", "Getting all crops success");
+			return ResponseEntity.status(HttpStatus.OK).headers(header).body(cropsDtos);
+		}
+		catch(ServiceException e)
+		{
+			HttpHeaders header = new HttpHeaders();
+			header.add("Description", "Getting all crops failed");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).headers(header).body(null);
+		}
 	}
 
 	@GetMapping("/getCropMSP")

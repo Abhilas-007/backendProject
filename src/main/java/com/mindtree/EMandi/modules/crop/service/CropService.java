@@ -9,7 +9,7 @@ import com.mindtree.EMandi.modules.crop.entity.CropVariety;
 public interface CropService {
 	public String addCrop(Crop crop);
 
-	public List<Crop> getAllCrops();
+	public List<Crop> getAllCrops() throws ServiceException;
 	
 	public Crop getCropMSP(String cropName, String adminId);
 	
