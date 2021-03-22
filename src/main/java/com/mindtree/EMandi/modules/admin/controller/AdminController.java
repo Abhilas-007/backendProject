@@ -163,7 +163,7 @@ public class AdminController {
 		
 		List<String> mandi=mandiRepository.findByAdminId(adminId);
 		HttpHeaders header = new HttpHeaders();
-		header.add("Description", "Getting all crops");
+		
 	List<Clerk> clerk = null;
 	try {
 		clerk = clerkservice.getAllClerks(mandi);
@@ -172,6 +172,7 @@ public class AdminController {
 		header.add("Description", "Error in getting all clerks");
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(header).body(null);
 	}
+	header.add("Description", "Getting all crops");
 	return ResponseEntity.status(HttpStatus.OK).headers(header).body(clerk);
 
 	
@@ -252,20 +253,21 @@ public class AdminController {
 	public ResponseEntity<ClerkDto> updateclerk(@RequestBody ClerkDto clerk) {
 
 		Clerk clerk1 = clerkConverter.dtoToEntity(clerk);
-
-		
+		HttpHeaders header = new HttpHeaders();
+		Clerk clerk2=null;
 		try {
-			clerkservice.updateClerk(clerk1);
+			clerk2=clerkservice.updateClerk(clerk1);
 		} catch (ServiceException e) {
 			// TODO Auto-generated catch block
-			System.out.println("Update failed");
+			header.add("Description", "Error in updation");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(header).body(null);
 		}
+		header.add("Description", "updating buyer");
+
+		//clerkRepository.save(clerk1);
 
 
-		clerkRepository.save(clerk1);
-
-
-		return new ResponseEntity<ClerkDto>(clerkConverter.entityToDto(clerk1), HttpStatus.OK);
+		return new ResponseEntity<ClerkDto>(clerkConverter.entityToDto(clerk2), HttpStatus.OK);
 
 	}
 
