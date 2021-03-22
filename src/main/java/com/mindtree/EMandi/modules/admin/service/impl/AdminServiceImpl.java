@@ -27,6 +27,7 @@ import com.mindtree.EMandi.modules.crop.entity.CropVariety;
 import com.mindtree.EMandi.modules.crop.repository.CropRepository;
 import com.mindtree.EMandi.modules.crop.repository.CropVarietyRepository;
 import com.mindtree.EMandi.modules.farmer.entity.Farmer;
+import com.mindtree.EMandi.modules.superadmin.service.SuperAdminService;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -43,6 +44,8 @@ public class AdminServiceImpl implements AdminService {
 	private CropRepository cropRepo;
 	@Autowired
 	private CropVarietyConverter cropVarietyConverter;
+	@Autowired
+	private SuperAdminService sAdminService;
 
 	@Override
 	public String validateLogin(Map<String, String> map) {
@@ -204,6 +207,12 @@ public class AdminServiceImpl implements AdminService {
 			admin.setState(adminRepo.findById(admin.getAdminId()).get().getState());
 			admin.setsAdmin(adminRepo.findById(admin.getAdminId()).get().getsAdmin());
 			adminRepo.save(admin);
+			try {
+				sAdminService.sendMail(admin);
+			} catch (ServiceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return admin;
 	}
