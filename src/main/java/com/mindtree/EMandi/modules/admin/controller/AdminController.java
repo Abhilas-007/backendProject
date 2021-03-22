@@ -141,17 +141,17 @@ public class AdminController {
 	@GetMapping("/getAllCrops/{adminId}")
 
 	public ResponseEntity<List<CropDto>> getCropByAdminId(@PathVariable (value="adminId") String adminId){
-	
+		HttpHeaders header = new HttpHeaders();
 		List<Crop> crops = null;
 		try {
 			crops = cropService.findCropByAdminId(adminId);
 		} catch (ServiceException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-
+			header.add("Description", "Error in getting all crops");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(header).body(null);
 		}
 
-		HttpHeaders header = new HttpHeaders();
+		
 		header.add("Description", "Getting all crops");
 		List<CropDto> crop = cropConverter.entityToDto(crops);
 		return ResponseEntity.status(HttpStatus.OK).headers(header).body(crop);
